@@ -11,13 +11,9 @@ public abstract class Shape {
     private UUID shapeId;
 
     @Column
-    private String shapeType;
+    protected String shapeType;
 
     public Shape() {}
-
-    public Shape(String shapeType) {
-        this.shapeType = shapeType;
-    }
 
     public UUID getShapeId() {
         return shapeId;
