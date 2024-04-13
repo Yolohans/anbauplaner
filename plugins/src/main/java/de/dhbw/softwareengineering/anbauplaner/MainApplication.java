@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = "de.dhbw.softwareengineering.anbauplaner.plugins")
-@EntityScan("de.dhbw.softwareengineering.anbauplaner.domain.entities")
+@EntityScan("de.dhbw.softwareengineering.anbauplaner.domain")
 public class MainApplication {
 
     public static void main(String[] args) {

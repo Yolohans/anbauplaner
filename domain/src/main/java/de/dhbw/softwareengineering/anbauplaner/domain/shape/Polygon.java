@@ -9,24 +9,23 @@ import java.util.UUID;
 @Entity
 public final class Polygon extends Shape {
 
-/*
     @ElementCollection
     private ArrayList<Point> points;
-*/
 
     public Polygon() {
         super.shapeType = "polygon";
     }
 
-  /*  public Polygon(ArrayList<Point> points) {
+    public Polygon(ArrayList<Point> points) {
+        super.shapeType = "polygon";
         this.points = points;
-    }*/
+    }
 
     public String getShapeType() {
         return shapeType;
     }
 
-   /* @Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Polygon)) return false;
@@ -38,5 +37,4 @@ public final class Polygon extends Shape {
     public int hashCode() {
         return Objects.hash(getShapeType(), points);
     }
-*/
 }

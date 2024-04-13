@@ -7,7 +7,7 @@ import java.util.UUID;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Shape {
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID shapeId;
 
     @Column
