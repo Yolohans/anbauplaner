@@ -8,19 +8,15 @@ import java.util.UUID;
 
 @Entity
 public final class Polygon extends Shape {
-
     @ElementCollection
     private ArrayList<Point> points;
-
     public Polygon() {
         super.shapeType = "polygon";
     }
-
     public Polygon(ArrayList<Point> points) {
         super.shapeType = "polygon";
         this.points = points;
     }
-
     public String getShapeType() {
         return shapeType;
     }
@@ -32,7 +28,6 @@ public final class Polygon extends Shape {
         Polygon polygon = (Polygon) o;
         return Objects.equals(getShapeType(), polygon.getShapeType()) && Objects.equals(points, polygon.points);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(getShapeType(), points);

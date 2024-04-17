@@ -22,5 +22,4 @@ public abstract class Shape {
     public String getShapeType() {
         return shapeType;
     }
-
 }

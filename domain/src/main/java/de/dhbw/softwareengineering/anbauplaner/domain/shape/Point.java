@@ -6,7 +6,6 @@ import java.util.Objects;
 
 @Embeddable
 public final class Point{
-
     private double x;
     private double y;
 
@@ -14,7 +13,6 @@ public final class Point{
         this.x = x;
         this.y = y;
     }
-
     protected Point() {
         //for Spring JPA
     }
@@ -22,7 +20,6 @@ public final class Point{
     public double getX() {
         return x;
     }
-
     public double getY() {
         return y;
     }
@@ -44,7 +41,6 @@ public final class Point{
         Point point = (Point) o;
         return Double.compare(point.getX(), getX()) == 0 && Double.compare(point.getY(), getY()) == 0;
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(getX(), getY());
