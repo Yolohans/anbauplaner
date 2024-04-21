@@ -1,5 +1,6 @@
-package de.dhbw.softwareengineering.anbauplaner.domain.genericValueObjects;
+package de.dhbw.softwareengineering.anbauplaner.domain.genericValueObjects.converters;
 
+import de.dhbw.softwareengineering.anbauplaner.domain.genericValueObjects.Year;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
