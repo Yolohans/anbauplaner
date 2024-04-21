@@ -1,7 +1,7 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.ackerAbstraction;
 
 import de.dhbw.softwareengineering.anbauplaner.domain.genericValueObjects.Name;
-import de.dhbw.softwareengineering.anbauplaner.domain.genericValueObjects.NameAttributeConverter;
+import de.dhbw.softwareengineering.anbauplaner.domain.genericValueObjects.converters.NameAttributeConverter;
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
 import jakarta.persistence.*;
 
@@ -26,20 +26,43 @@ public abstract class AAcker {
 
     @OneToMany(mappedBy = "acker")
     protected List<ABeet> beete;
-    public AAcker() {
-    }
 
-    public AAcker(Name name, Shape shape) {
-        this.name = name;
-        this.shape = shape;
-    }
-
-
-    public String getAckerId() {
+    protected String getAckerId() {
         return ackerId;
     }
 
-    public Name getName() {
+    protected Name getName() {
         return name;
     }
+
+    protected Shape getShape() {
+        return shape;
+    }
+
+    protected List<ATunnel> getTunnels() {
+        return tunnels;
+    }
+
+    protected List<ABeet> getBeete() {
+        return beete;
+    }
+
+    protected void setName(Name name) {
+        this.name = name;
+    }
+
+    protected void setShape(Shape shape) {
+        this.shape = shape;
+    }
+
+    protected void setTunnels(List<ATunnel> tunnels) {
+        this.tunnels = tunnels;
+    }
+
+    protected void setBeete(List<ABeet> beete) {
+        this.beete = beete;
+    }
+
+    @Override
+    public abstract String toString();
 }
