@@ -16,7 +16,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
 @Entity
-public final class Frucht {
+public class Frucht {
     @Id
     private String fruchtId;
     @Convert(converter = FamilieAttributeConverter.class)
