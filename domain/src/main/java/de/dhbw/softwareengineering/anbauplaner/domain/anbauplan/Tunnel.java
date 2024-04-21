@@ -3,11 +3,7 @@ package de.dhbw.softwareengineering.anbauplaner.domain.anbauplan;
 import de.dhbw.softwareengineering.anbauplaner.domain.ackerAbstraction.ABeet;
 import de.dhbw.softwareengineering.anbauplaner.domain.ackerAbstraction.ATunnel;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericValueObjects.Name;
-import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 import java.util.ArrayList;
 

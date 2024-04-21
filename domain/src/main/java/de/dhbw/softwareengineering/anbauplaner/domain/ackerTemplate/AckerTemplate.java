@@ -3,8 +3,6 @@ package de.dhbw.softwareengineering.anbauplaner.domain.ackerTemplate;
 import de.dhbw.softwareengineering.anbauplaner.domain.ackerAbstraction.AAcker;
 import de.dhbw.softwareengineering.anbauplaner.domain.ackerAbstraction.ABeet;
 import de.dhbw.softwareengineering.anbauplaner.domain.ackerAbstraction.ATunnel;
-import de.dhbw.softwareengineering.anbauplaner.domain.anbauplan.Beet;
-import de.dhbw.softwareengineering.anbauplaner.domain.anbauplan.Tunnel;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericValueObjects.Name;
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
 import jakarta.persistence.Entity;
@@ -18,12 +16,12 @@ public class AckerTemplate extends AAcker {
     private LocalDateTime lastUpdateAt;
 
     public AckerTemplate() {}
-    public AckerTemplate(Name name, List<ATunnel> tunnels, List<ABeet> beete) {
+    public AckerTemplate(Name name, List<ATunnel> tunnels, List<ABeet> beete, LocalDateTime createdAt, LocalDateTime lastUpdateAt) {
         this.name = name;
         this.tunnels = tunnels;
         this.beete = beete;
-        this.createdAt = LocalDateTime.now();
-        this.lastUpdateAt = LocalDateTime.now();
+        this.createdAt = createdAt;
+        this.lastUpdateAt = createdAt;
     }
 
     @Override

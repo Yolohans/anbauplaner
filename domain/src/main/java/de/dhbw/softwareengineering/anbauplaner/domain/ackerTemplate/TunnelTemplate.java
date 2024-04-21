@@ -5,7 +5,6 @@ import de.dhbw.softwareengineering.anbauplaner.domain.ackerAbstraction.ATunnel;
 import de.dhbw.softwareengineering.anbauplaner.domain.anbauplan.Acker;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericValueObjects.Name;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,12 +16,12 @@ public class TunnelTemplate extends ATunnel {
     protected TunnelTemplate() {
     }
 
-    protected TunnelTemplate(String id, Name name, Acker acker) {
+    protected TunnelTemplate(String id, Name name, Acker acker, LocalDateTime createdAt) {
         this.tunnelId = id;
         this.name = name;
         this.acker = acker;
         this.Beete = new ArrayList<ABeet>(); //TODO
-        createdAt = LocalDateTime.now();
+        this.createdAt = createdAt;
     }
 
     @Override
