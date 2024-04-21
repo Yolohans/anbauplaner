@@ -7,5 +7,5 @@ import java.util.UUID;
 
 public interface SpringDataShapeRepository extends JpaRepository<Shape, UUID> {
 
-    //Polygon findPolygonById(UUID polygonId);
+
 }

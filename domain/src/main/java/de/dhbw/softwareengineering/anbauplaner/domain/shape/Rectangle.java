@@ -1,5 +1,6 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.shape;
 
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import org.apache.commons.lang3.Validate;
 
@@ -10,6 +11,7 @@ public final class Rectangle extends Shape {
 
     private Double xLength;
     private Double yLength;
+    @Embedded
     private Point position;
 
     public Rectangle() {
