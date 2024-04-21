@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-MainApplication<plugins>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "de.dhbw.softwareengineering.anbauplaner.MainApplication",
+            "projectName": "plugins",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
