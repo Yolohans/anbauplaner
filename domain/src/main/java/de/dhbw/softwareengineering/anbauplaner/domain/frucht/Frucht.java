@@ -1,19 +1,36 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.frucht;
 
+import de.dhbw.softwareengineering.anbauplaner.domain.frucht.converters.ArtAttributeConverter;
+import de.dhbw.softwareengineering.anbauplaner.domain.frucht.converters.FamilieAttributeConverter;
+import de.dhbw.softwareengineering.anbauplaner.domain.frucht.converters.HerstellungsjahrAttributeConverter;
+import de.dhbw.softwareengineering.anbauplaner.domain.frucht.converters.SorteAttributeConverter;
 import de.dhbw.softwareengineering.anbauplaner.domain.hersteller.Hersteller;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
+@Entity
 public final class Frucht {
-    private final String fruchtId;
-    private final Familie familie;
-    private final Art art;
-    private final Sorte sorte;
-    private final HerstellungsJahr herstellungsjahr;
-    private final Hersteller hersteller;
+    @Id
+    private String fruchtId;
+    @Convert(converter = FamilieAttributeConverter.class)
+    private Familie familie;
+    @Convert(converter = ArtAttributeConverter.class)
+    private Art art;
+    @Convert(converter = SorteAttributeConverter.class)
+    private Sorte sorte;
+    @Convert(converter = HerstellungsjahrAttributeConverter.class)
+    private HerstellungsJahr herstellungsjahr;
+    @OneToOne
+    private Hersteller hersteller;
+
+    protected Frucht(){};
 
     public Frucht(Familie familie, Art art, Sorte sorte, HerstellungsJahr herstellungsjahr, Hersteller hersteller) {
         if (familie == null && art == null && sorte == null) {
@@ -51,6 +68,43 @@ public final class Frucht {
         return hersteller;
     }
 
+    public void setFruchtId(String fruchtId) {
+        this.fruchtId = fruchtId;
+    }
+
+    public void setFamilie(Familie familie) {
+        this.familie = familie;
+    }
+
+    public void setArt(Art art) {
+        this.art = art;
+    }
+
+    public void setSorte(Sorte sorte) {
+        this.sorte = sorte;
+    }
+
+    public void setHerstellungsjahr(HerstellungsJahr herstellungsjahr) {
+        this.herstellungsjahr = herstellungsjahr;
+    }
+
+    public void setHersteller(Hersteller hersteller) {
+        this.hersteller = hersteller;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Frucht{");
+        sb.append("fruchtId='").append(fruchtId).append('\'');
+        sb.append(", familie=").append(familie);
+        sb.append(", art=").append(art);
+        sb.append(", sorte=").append(sorte);
+        sb.append(", herstellungsjahr=").append(herstellungsjahr);
+        sb.append(", hersteller=").append(hersteller);
+        sb.append('}');
+        return sb.toString();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -64,6 +118,7 @@ public final class Frucht {
         return Objects.hash(getFruchtId());
     }
 
+    //TODO Catch NoSuchAlgo
     private String generateFruchtId() {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-1");
@@ -83,8 +138,8 @@ public final class Frucht {
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
+            // implement logging here - such that this case can be detected and fixed
             return "ERROR_GENERATING_ID";
         }
     }
-
 }

@@ -1,19 +1,28 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.frucht;
 
-public class HerstellungsJahr {
+public final class HerstellungsJahr {
     private static final int MIN_YEAR = 2000;
     private static final int MAX_YEAR = 2100;
 
     private final int year;
 
-    public HerstellungsJahr(int year) {
+    private HerstellungsJahr(int year) {
         if (year < MIN_YEAR || year > MAX_YEAR) {
             throw new IllegalArgumentException("Year must be between " + MIN_YEAR + " and " + MAX_YEAR);
         }
         this.year = year;
     }
 
-    public int getValue() {
+    public static HerstellungsJahr of(Integer year) {
+        if (year == null) {
+            return null;
+            // implement logging here - such that this case can be detected and fixed
+        } else {
+            return new HerstellungsJahr(year);
+        }
+    }
+
+    public Integer getValue() {
         return year;
     }
 

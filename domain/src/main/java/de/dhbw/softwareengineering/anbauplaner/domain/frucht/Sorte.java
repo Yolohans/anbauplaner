@@ -6,7 +6,7 @@ public final class Sorte {
 
     private final String value;
 
-    private Sorte(String value) {
+    Sorte(String value) {
         if (value.length() > MAX_LENGTH) {
            throw new IllegalArgumentException("Art length exceeds the maximum limit of " + MAX_LENGTH);
        } else if (value.length() < MIN_LENGTH) {

@@ -24,6 +24,7 @@ public final class Art {
         }
     }
 
+
     public String getValue() {
         return value;
     }
