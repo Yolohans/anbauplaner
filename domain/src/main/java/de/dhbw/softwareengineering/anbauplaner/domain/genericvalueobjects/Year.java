@@ -1,4 +1,4 @@
-package de.dhbw.softwareengineering.anbauplaner.domain.genericValueObjects;
+package de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects;
 
 public final class Year {
     private static final int MIN_YEAR = 2000;

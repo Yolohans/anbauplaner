@@ -1,4 +1,4 @@
-package de.dhbw.softwareengineering.anbauplaner.domain.genericValueObjects;
+package de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects;
 
 import java.util.regex.Pattern;
 

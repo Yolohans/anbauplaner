@@ -1,9 +1,9 @@
-package de.dhbw.softwareengineering.anbauplaner.domain.ackerTemplate;
+package de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate;
 
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerAbstraction.ABeet;
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerAbstraction.ATunnel;
+import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.ABeet;
+import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.ATunnel;
 import de.dhbw.softwareengineering.anbauplaner.domain.anbauplan.Acker;
-import de.dhbw.softwareengineering.anbauplaner.domain.genericValueObjects.Name;
+import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Name;
 import jakarta.persistence.Entity;
 
 import java.time.LocalDateTime;
