@@ -1,7 +1,7 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.hersteller;
 
-import de.dhbw.softwareengineering.anbauplaner.domain.genericValueObjects.Name;
-import de.dhbw.softwareengineering.anbauplaner.domain.genericValueObjects.converters.NameAttributeConverter;
+import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Name;
+import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.converters.NameAttributeConverter;
 import jakarta.persistence.*;
 
 import java.util.UUID;

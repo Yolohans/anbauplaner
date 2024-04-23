@@ -1,8 +1,8 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.anbauplan;
 
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerAbstraction.ABeet;
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerAbstraction.ATunnel;
-import de.dhbw.softwareengineering.anbauplaner.domain.genericValueObjects.Name;
+import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.ABeet;
+import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.ATunnel;
+import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Name;
 import jakarta.persistence.Entity;
 
 import java.util.ArrayList;

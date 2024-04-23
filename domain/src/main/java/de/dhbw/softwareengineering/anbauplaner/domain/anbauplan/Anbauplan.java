@@ -1,9 +1,9 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.anbauplan;
 
-import de.dhbw.softwareengineering.anbauplaner.domain.genericValueObjects.Name;
-import de.dhbw.softwareengineering.anbauplaner.domain.genericValueObjects.converters.NameAttributeConverter;
-import de.dhbw.softwareengineering.anbauplaner.domain.genericValueObjects.Year;
-import de.dhbw.softwareengineering.anbauplaner.domain.genericValueObjects.converters.YearAttributeConverter;
+import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Name;
+import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.converters.NameAttributeConverter;
+import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Year;
+import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.converters.YearAttributeConverter;
 import jakarta.persistence.*;
 
 import java.util.List;
