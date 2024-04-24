@@ -4,27 +4,17 @@ import jakarta.persistence.*;
 
 import java.util.UUID;
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "shape_type")
 public abstract class Shape {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID shapeId;
 
-    @Column
-    protected String shapeType;
-
     public Shape() {}
-
-    public Shape(String shapeType){
-        this.shapeType = shapeType;
-    }
 
     public UUID getShapeId() {
         return shapeId;
-    }
-
-    public String getShapeType() {
-        return shapeType;
     }
 
     @Override

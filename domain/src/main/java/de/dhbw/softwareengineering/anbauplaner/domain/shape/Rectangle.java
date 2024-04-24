@@ -1,5 +1,6 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.shape;
 
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import org.apache.commons.lang3.Validate;
@@ -7,6 +8,7 @@ import org.apache.commons.lang3.Validate;
 import java.util.Objects;
 
 @Entity
+@DiscriminatorValue("rectangle")
 public final class Rectangle extends Shape {
 
     private Double xLength;
@@ -14,15 +16,13 @@ public final class Rectangle extends Shape {
     @Embedded
     private Point position;
 
-    public Rectangle() {
-        super("rectangle");
-    }
+    public Rectangle() {super();}
 
     public Rectangle(Double xLength, Double yLength, Point position) {
-        super("rectangle");
-        Objects.requireNonNull(xLength, "Double value cannot be null");
-        Objects.requireNonNull(yLength, "Double value cannot be null");
-        Objects.requireNonNull(position, "Double value cannot be null");
+        super();
+        Objects.requireNonNull(xLength, "xLength cannot be null");
+        Objects.requireNonNull(yLength, "yLength cannot be null");
+        Objects.requireNonNull(position, "Position cannot be null");
         Validate.isTrue(xLength > 0, "xLength must be larger than 0");
         Validate.isTrue(yLength > 0, "yLength must be larger than 0");
 
@@ -62,7 +62,6 @@ public final class Rectangle extends Shape {
         sb.append("xLength=").append(xLength);
         sb.append(", yLength=").append(yLength);
         sb.append(", position=").append(position);
-        sb.append(", shapeType='").append(shapeType).append('\'');
         sb.append('}');
         return sb.toString();
     }
