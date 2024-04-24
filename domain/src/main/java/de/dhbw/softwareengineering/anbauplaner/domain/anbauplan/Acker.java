@@ -14,8 +14,7 @@ public class Acker extends AAcker {
     protected Acker() {}
 
     protected Acker(Name name, Shape shape, Anbauplan anbauplan) {
-        this.name = name;
-        this.shape = shape;
+        super(name,shape);
         this.anbauplan = anbauplan;
     }
 
@@ -31,11 +30,11 @@ public class Acker extends AAcker {
     public String toString() {
         final StringBuilder sb = new StringBuilder("Acker{");
         sb.append("anbauplan=").append(anbauplan);
-        sb.append(", ackerId='").append(ackerId).append('\'');
-        sb.append(", name=").append(name);
-        sb.append(", shape=").append(shape);
-        sb.append(", tunnels=").append(tunnels);
-        sb.append(", beete=").append(beete);
+        sb.append(", ackerId='").append(this.getAckerId()).append('\'');
+        sb.append(", name=").append(this.getName());
+        sb.append(", shape=").append(this.getShape());
+        sb.append(", tunnels=").append(this.getTunnels());
+        sb.append(", beete=").append(this.getBeete());
         sb.append('}');
         return sb.toString();
     }

@@ -5,7 +5,9 @@ import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.conver
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -13,54 +15,79 @@ public abstract class AAcker {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    protected String ackerId;
+    private UUID ackerId;
 
     @Convert(converter = NameAttributeConverter.class)
-    protected Name name;
+    private Name name;
     @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="shapeId", referencedColumnName = "shapeId")
-    protected Shape shape;
+    private Shape shape;
 
     @OneToMany(mappedBy = "acker")
-    protected List<ATunnel> tunnels;
+    private List<ATunnel> tunnels;
 
     @OneToMany(mappedBy = "acker")
-    protected List<ABeet> beete;
+    private List<ABeet> beete;
 
-    protected String getAckerId() {
+    public AAcker(){}
+
+    public AAcker(Name name, Shape shape) {
+        this.name = name;
+        this.shape = shape;
+        this.tunnels = new ArrayList<ATunnel>();
+        this.beete = new ArrayList<ABeet>();
+    }
+
+    public UUID getAckerId() {
         return ackerId;
     }
 
-    protected Name getName() {
+    public Name getName() {
         return name;
     }
 
-    protected Shape getShape() {
+    public Shape getShape() {
         return shape;
     }
 
-    protected List<ATunnel> getTunnels() {
+    public List<ATunnel> getTunnels() {
         return tunnels;
     }
 
-    protected List<ABeet> getBeete() {
+    public List<ABeet> getBeete() {
         return beete;
     }
 
-    protected void setName(Name name) {
+    public void setName(Name name) {
         this.name = name;
     }
 
-    protected void setShape(Shape shape) {
+    public void setShape(Shape shape) {
         this.shape = shape;
     }
 
-    protected void setTunnels(List<ATunnel> tunnels) {
+    public void setTunnels(List<ATunnel> tunnels) {
         this.tunnels = tunnels;
     }
 
-    protected void setBeete(List<ABeet> beete) {
+    public void setBeete(List<ABeet> beete) {
         this.beete = beete;
+    }
+
+    public void addTunnel(ATunnel tunnel) {
+        this.tunnels.add(tunnel);
+    }
+
+    public void addBeet(ABeet beet) {
+        this.beete.add(beet);
+    }
+
+    public boolean removeTunnel(ATunnel tunnel) {
+        return this.tunnels.remove(tunnel);
+    }
+
+    public boolean removeBeet(ABeet beet) {
+        return this.beete.remove(beet);
     }
 
     @Override
