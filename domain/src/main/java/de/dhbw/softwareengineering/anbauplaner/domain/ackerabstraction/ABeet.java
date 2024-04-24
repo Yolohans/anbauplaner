@@ -5,24 +5,36 @@ import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.conver
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
 import jakarta.persistence.*;
 
+import java.util.UUID;
+
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class ABeet {
     @Id
-    protected String beetId;
+    @GeneratedValue
+    private UUID beetId;
     @Convert(converter = NameAttributeConverter.class)
-    protected Name name;
+    private Name name;
     @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="shapeId", referencedColumnName = "shapeId")
-    protected Shape shape;
+    private Shape shape;
     @ManyToOne
     @JoinColumn(name = "ackerId")
-    protected AAcker acker;
+    private AAcker acker;
     @ManyToOne
     @JoinColumn(name = "tunnelId")
-    protected ATunnel tunnel;
+    private ATunnel tunnel;
 
-    protected String getId() {
+    protected ABeet() {}
+
+    protected ABeet(Name name, Shape shape, AAcker acker, ATunnel tunnel) {
+        this.name = name;
+        this.shape = shape;
+        this.acker = acker;
+        this.tunnel = tunnel;
+    }
+
+    protected UUID getBeetId() {
         return beetId;
     }
 
@@ -52,6 +64,10 @@ public abstract class ABeet {
 
     protected void setTunnel(ATunnel tunnel) {
         this.tunnel = tunnel;
+    }
+
+    protected void setAcker(AAcker acker) {
+        this.acker = acker;
     }
 
     @Override
