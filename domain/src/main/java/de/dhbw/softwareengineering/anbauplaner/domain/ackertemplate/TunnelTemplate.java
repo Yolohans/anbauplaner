@@ -4,6 +4,7 @@ import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.ABeet;
 import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.ATunnel;
 import de.dhbw.softwareengineering.anbauplaner.domain.anbauplan.Acker;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Name;
+import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
 import jakarta.persistence.Entity;
 
 import java.time.LocalDateTime;
@@ -16,23 +17,25 @@ public class TunnelTemplate extends ATunnel {
     protected TunnelTemplate() {
     }
 
-    protected TunnelTemplate(String id, Name name, Acker acker, LocalDateTime createdAt) {
-        this.tunnelId = id;
-        this.name = name;
-        this.acker = acker;
-        this.Beete = new ArrayList<ABeet>(); //TODO
-        this.createdAt = createdAt;
+    protected TunnelTemplate(Name name, Shape shape, Acker acker) {
+        super(name,shape,acker);
+        this.Beete = new ArrayList<ABeet>();
+        this.createdAt = LocalDateTime.now();
+    }
+
+    protected LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("TunnelTemplate{");
         sb.append("createdAt=").append(createdAt);
-        sb.append(", tunnelId='").append(tunnelId).append('\'');
-        sb.append(", name=").append(name);
-        sb.append(", shape=").append(shape);
-        sb.append(", acker=").append(acker);
-        sb.append(", Beete=").append(Beete);
+        sb.append(", tunnelId='").append(this.getTunnelId()).append('\'');
+        sb.append(", name=").append(this.getTunnelId());
+        sb.append(", shape=").append(this.getShape());
+        sb.append(", acker=").append(this.getAcker());
+        sb.append(", Beete=").append(this.getBeete());
         sb.append('}');
         return sb.toString();
     }
