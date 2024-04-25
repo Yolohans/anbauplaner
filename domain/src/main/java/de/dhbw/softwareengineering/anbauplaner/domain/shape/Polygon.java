@@ -15,15 +15,16 @@ Es gibt ein weiteres Problem: Die Reihenfolge der Punkte ist wichtig. Diese wird
 
 
 @Entity
+@DiscriminatorValue("polygon")
 public final class Polygon extends Shape {
     @ElementCollection
     private ArrayList<Point> points;
     public Polygon() {
-        super.shapeType = "polygon";
+        super();
     }
 
     public Polygon(ArrayList<Point> points) {
-        super("polygon");
+        super();
         this.points = points;
     }
 
