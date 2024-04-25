@@ -1,11 +1,13 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction;
 
+import de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate.BeetTemplate;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Name;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.converters.NameAttributeConverter;
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,7 +31,7 @@ public abstract class ATunnel {
     private AAcker acker;
 
     @OneToMany(mappedBy = "tunnel")
-    protected List<ABeet> Beete;
+    protected HashMap<UUID, ABeet> beete;
 
     protected ATunnel() {}
 
@@ -37,7 +39,7 @@ public abstract class ATunnel {
         this.name = name;
         this.shape = shape;
         this.acker = acker;
-        Beete = new ArrayList<ABeet>();
+        this.beete = new HashMap<UUID, ABeet>();
     }
 
     protected UUID getTunnelId() {
@@ -56,8 +58,8 @@ public abstract class ATunnel {
         return acker;
     }
 
-    public List<ABeet> getBeete() {
-        return Beete;
+    public HashMap<UUID, ABeet> getBeete() {
+        return beete;
     }
 
     protected void setName(Name name) {
@@ -72,18 +74,24 @@ public abstract class ATunnel {
         this.acker = acker;
     }
 
-    protected void setBeete(List<ABeet> beete) {
-        Beete = beete;
+    protected void setBeete(HashMap<UUID, ABeet> beete) {
+        this.beete = beete;
     }
 
-    protected boolean addBeet(ABeet beet) {
-        return this.Beete.add(beet);
+    public void add(ABeet beet) {
+        this.beete.put(beet.getBeetId(),beet);
     }
 
-    protected boolean removeBeet(ABeet beet) {
-        return this.Beete.remove(beet);
+    public void remove(ABeet beet) {
+        this.beete.remove(beet.getBeetId());
+    }
+
+    public void remove(UUID beetId) {
+        this.beete.remove(beetId);
     }
 
     @Override
     public abstract String toString();
+
+
 }

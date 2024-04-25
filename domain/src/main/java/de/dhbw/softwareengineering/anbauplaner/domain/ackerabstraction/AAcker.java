@@ -1,11 +1,15 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction;
 
+import de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate.BeetTemplate;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Name;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.converters.NameAttributeConverter;
+import de.dhbw.softwareengineering.anbauplaner.domain.shape.Point;
+import de.dhbw.softwareengineering.anbauplaner.domain.shape.Rectangle;
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,71 +27,79 @@ public abstract class AAcker {
     @JoinColumn(name="shapeId", referencedColumnName = "shapeId")
     private Shape shape;
 
-    @OneToMany(mappedBy = "acker")
-    private List<ATunnel> tunnels;
+    @OneToMany(mappedBy = "acker", cascade=CascadeType.ALL)
+    private HashMap<UUID,ATunnel> tunnels;
 
     @OneToMany(mappedBy = "acker")
-    private List<ABeet> beete;
+    private HashMap<UUID,ABeet> beete;
 
-    public AAcker(){}
+    protected AAcker(){}
 
-    public AAcker(Name name, Shape shape) {
+    protected AAcker(Name name, Shape shape) {
         this.name = name;
         this.shape = shape;
-        this.tunnels = new ArrayList<ATunnel>();
-        this.beete = new ArrayList<ABeet>();
+        this.tunnels = new HashMap<UUID,ATunnel>();
+        this.beete = new HashMap<UUID,ABeet>();
     }
 
-    public UUID getAckerId() {
+    protected UUID getAckerId() {
         return ackerId;
     }
 
-    public Name getName() {
+    protected Name getName() {
         return name;
     }
 
-    public Shape getShape() {
+    protected Shape getShape() {
         return shape;
     }
 
-    public List<ATunnel> getTunnels() {
+    protected HashMap<UUID,ATunnel> getTunnels() {
         return tunnels;
     }
 
-    public List<ABeet> getBeete() {
+    protected HashMap<UUID,ABeet> getBeete() {
         return beete;
     }
 
-    public void setName(Name name) {
+    protected void setName(Name name) {
         this.name = name;
     }
 
-    public void setShape(Shape shape) {
+    protected void setShape(Shape shape) {
         this.shape = shape;
     }
 
-    public void setTunnels(List<ATunnel> tunnels) {
+    protected void setTunnels(HashMap<UUID,ATunnel> tunnels) {
         this.tunnels = tunnels;
     }
 
-    public void setBeete(List<ABeet> beete) {
+    protected void setBeete(HashMap<UUID,ABeet> beete) {
         this.beete = beete;
     }
 
-    public void addTunnel(ATunnel tunnel) {
-        this.tunnels.add(tunnel);
+    protected void addBeet(ABeet beet) {
+        this.getBeete().put(beet.getBeetId(), beet);
     }
 
-    public void addBeet(ABeet beet) {
-        this.beete.add(beet);
+    protected void addTunnel(ATunnel tunnel) {
+        this.getTunnels().put(tunnel.getTunnelId(), tunnel);
     }
 
-    public boolean removeTunnel(ATunnel tunnel) {
-        return this.tunnels.remove(tunnel);
+    protected void removeBeet(ABeet beet) {
+        this.getBeete().remove(beet.getBeetId());
     }
 
-    public boolean removeBeet(ABeet beet) {
-        return this.beete.remove(beet);
+    protected void removeBeet(UUID beetId) {
+        this.getBeete().remove(beetId);
+    }
+
+    protected void removeTunnel(ATunnel tunnel) {
+        this.getTunnels().remove(tunnel.getTunnelId());
+    }
+
+    protected void removeTunnel(UUID tunnelId) {
+        this.getTunnels().remove(tunnelId);
     }
 
     @Override

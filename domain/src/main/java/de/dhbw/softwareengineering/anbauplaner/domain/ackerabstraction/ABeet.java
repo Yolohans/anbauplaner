@@ -70,6 +70,10 @@ public abstract class ABeet {
         this.acker = acker;
     }
 
+    protected void removeTunnel() {
+        this.tunnel = null;
+    }
+
     @Override
     public abstract String toString();
 }

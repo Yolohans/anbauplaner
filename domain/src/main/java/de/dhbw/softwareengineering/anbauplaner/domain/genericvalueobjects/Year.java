@@ -8,7 +8,7 @@ public final class Year {
 
     public Year(Integer year) {
         if (year == null) {
-            throw new IllegalArgumentException("Art cannot be null");
+            throw new IllegalArgumentException("Year cannot be null");
         } else if (year < MIN_YEAR || year > MAX_YEAR) {
             throw new IllegalArgumentException("Year must be between " + MIN_YEAR + " and " + MAX_YEAR);
         }
