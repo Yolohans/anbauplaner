@@ -1,5 +1,8 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate;
 
+import de.dhbw.softwareengineering.anbauplaner.domain.domainservices.Collidable;
+import de.dhbw.softwareengineering.anbauplaner.domain.domainservices.exceptions.ChildDoesNotFitException;
+import de.dhbw.softwareengineering.anbauplaner.domain.domainservices.exceptions.CollisionException;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Name;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.converters.NameAttributeConverter;
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Point;
@@ -7,11 +10,13 @@ import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
-public class TunnelTemplate {
+public class TunnelTemplate implements Collidable {
     @Id
     @GeneratedValue
     private UUID tunnelId;
@@ -45,6 +50,23 @@ public class TunnelTemplate {
         shape = shape.replacePosition(position);
     }
 
+    protected void attachBeetAtPosition(BeetTemplate beet, Point position) {
+        if (beet.doesNotFitInto(this)) {
+            throw new ChildDoesNotFitException(beet,this,"Position and dimension of the beet exceed the acker's dimensions.");
+        }
+
+        List<Collidable> collidables = getCollidables();
+        if (!beet.collidesWith(collidables).isEmpty()) {
+            throw new CollisionException(beet, collidables, "Beet collides with other beete.");
+        }
+
+        this.beete.put(beet.getBeetId(),beet);
+    }
+
+    protected void removeBeetById(UUID beetId) {
+        this.beete.remove(beetId);
+    }
+
     protected LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -57,6 +79,7 @@ public class TunnelTemplate {
         return name;
     }
 
+    @Override
     public Shape getShape() {
         return shape;
     }
@@ -81,12 +104,12 @@ public class TunnelTemplate {
         this.ackerId = ackerId;
     }
 
-    protected void add(BeetTemplate beet) {
-        this.beete.put(beet.getBeetId(),beet);
-    }
-
-    protected void removeBeetById(UUID beetId) {
-        this.beete.remove(beetId);
+    private List<Collidable> getCollidables() {
+        List<Collidable> collidables = new ArrayList<>();
+        for (Collidable elem : this.getBeete().values()) {
+            collidables.add(elem);
+        }
+        return collidables;
     }
 
     @Override

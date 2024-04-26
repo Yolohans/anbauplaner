@@ -56,11 +56,6 @@ public class AckerTemplateMockBuilder {
         return this;
     }
 
-    public AckerTemplateMockBuilder withCollisionManagementActive(boolean collisionManagementActive) {
-        Mockito.when(mockAckerTemplate.getCollisionManagementActive()).thenReturn(collisionManagementActive);
-        return this;
-    }
-
     public AckerTemplate build() {
         return mockAckerTemplate;
     }

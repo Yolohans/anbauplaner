@@ -1,5 +1,6 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate;
 
+import de.dhbw.softwareengineering.anbauplaner.domain.domainservices.Collidable;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Name;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.converters.NameAttributeConverter;
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Point;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-public class BeetTemplate {
+public class BeetTemplate implements Collidable {
     @Id
     @GeneratedValue
     private UUID beetId;
@@ -74,6 +75,7 @@ public class BeetTemplate {
         return name;
     }
 
+    @Override
     public Shape getShape() {
         return shape;
     }
@@ -94,11 +96,11 @@ public class BeetTemplate {
         this.shape = shape;
     }
 
-    public void setAckerId(UUID ackerId) {
+    protected void setAckerId(UUID ackerId) {
         this.ackerId = ackerId;
     }
 
-    public void setTunnelId(UUID tunnelId) {
+    protected void setTunnelId(UUID tunnelId) {
         this.tunnelId = tunnelId;
     }
 

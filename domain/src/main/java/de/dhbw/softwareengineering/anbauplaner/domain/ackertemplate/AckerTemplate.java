@@ -1,5 +1,8 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate;
 
+import de.dhbw.softwareengineering.anbauplaner.domain.domainservices.Collidable;
+import de.dhbw.softwareengineering.anbauplaner.domain.domainservices.exceptions.ChildDoesNotFitException;
+import de.dhbw.softwareengineering.anbauplaner.domain.domainservices.exceptions.CollisionException;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Name;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.converters.NameAttributeConverter;
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Point;
@@ -8,11 +11,13 @@ import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
-public class AckerTemplate {
+public class AckerTemplate implements Collidable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -38,7 +43,6 @@ public class AckerTemplate {
 
     private LocalDateTime createdAt;
     private LocalDateTime lastUpdateAt;
-    private Boolean collisionManagementActive;
 
     public AckerTemplate(Name name, Shape shape) {
         this.name = name;
@@ -48,7 +52,6 @@ public class AckerTemplate {
         LocalDateTime now = LocalDateTime.now();
         this.createdAt = now;
         this.lastUpdateAt = now;
-        this.collisionManagementActive = false;
     }
 
     public AckerTemplate(Name name) {
@@ -57,33 +60,52 @@ public class AckerTemplate {
 
     public AckerTemplate() {}
 
-
     public void createTunnel(Name name, Shape shape) {
-        //validate is in bounds
-        //validate collision
+
         TunnelTemplate tunnel = new TunnelTemplate(name, shape, this.getAckerId());
+
+        if (tunnel.doesNotFitInto(this)) {
+            throw new ChildDoesNotFitException(tunnel,this,"Position and dimension of the tunnel exceed the acker's dimensions.");
+        }
+
+        List<Collidable> collidables = getCollidables();
+        if (!tunnel.collidesWith(collidables).isEmpty()) {
+            throw new CollisionException(tunnel, collidables, "Tunnel collides with other tunnels or beete.");
+        }
+
         this.addTunnel(tunnel);
     }
 
     public void createBeetInAcker(Name name, Shape shape) {
-        //validate is in bounds
-        //validate collision
-        BeetTemplate beet = new BeetTemplateFactory()
-                .withAcker(this.getAckerId())                .withName(name)
-                .withShape(shape)
-                .build();
-        this.addBeet(beet);
-    }
 
-    public void createBeetInTunnel(Name name, Shape shape, UUID tunnelId) {
-        //validate is in bounds
-        //validate collision
         BeetTemplate beet = new BeetTemplateFactory()
-                .withTunnel(tunnelId)
+                .withAckerId(this.getAckerId())
                 .withName(name)
                 .withShape(shape)
                 .build();
-        this.getTunnelById(tunnelId).add(beet);
+
+        if (beet.doesNotFitInto(this)) {
+            throw new ChildDoesNotFitException(beet,this,"Position and dimension of the beet exceed the acker's dimensions.");
+        }
+
+        List<Collidable> collidables = getCollidables();
+        if (!beet.collidesWith(collidables).isEmpty()) {
+            throw new CollisionException(beet, collidables, "Beet collides with other tunnels or beete.");
+        }
+
+        this.addBeet(beet);
+    }
+
+
+
+    public void createBeetInTunnel(Name name, Shape shape, UUID tunnelId) {
+        BeetTemplate beet = new BeetTemplateFactory()
+                .withTunnelId(tunnelId)
+                .withName(name)
+                .withShape(shape)
+                .build();
+
+        this.getTunnelById(tunnelId).attachBeetAtPosition(beet, shape.getPosition());
     }
 
     public void deleteBeet(UUID beetId) {
@@ -116,10 +138,11 @@ public class AckerTemplate {
         TunnelTemplate newTunnel = this.getTunnelById(tunnelId);
 
         if (newTunnel != null && beet != null) {
+            //TODO validate shape not beet; adjust method attachBeet to fit to cases attachToPosition and createBeetAtTunnel
+            newTunnel.attachBeetAtPosition(beet, position);
             if (formerTunnel != null) {
                 formerTunnel.removeBeetById(beetId);
             }
-            newTunnel.add(beet);
             beet.attachToTunnel(newTunnel, position);
         }
     }
@@ -141,16 +164,21 @@ public class AckerTemplate {
         tunnel.moveToPosition(position);
     }
 
+    public void changeName(Name name) {
+        this.name = name;
+    }
+
+    public void changeShape(Shape shape) {
+        //TODO validate that new acker_shape can hold its elements
+        this.shape = shape;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
     public LocalDateTime getLastUpdateAt() {
         return lastUpdateAt;
-    }
-
-    public Boolean getCollisionManagementActive() {
-        return collisionManagementActive;
     }
 
     public UUID getAckerId() {
@@ -161,6 +189,7 @@ public class AckerTemplate {
         return name;
     }
 
+    @Override
     public Shape getShape() {
         return shape;
     }
@@ -185,33 +214,31 @@ public class AckerTemplate {
         return beete;
     }
 
-    public void changeName(Name name) {
-        this.name = name;
-    }
-
-    public void changeShape(Shape shape) {
-        //TODO validate that new acker_shape can hold its elements
-        this.shape = shape;
-    }
-
-    protected void addBeet(BeetTemplate beet) {
+    private void addBeet(BeetTemplate beet) {
         this.getBeete().put(beet.getBeetId(), beet);
     }
 
-    protected void addTunnel(TunnelTemplate tunnel) {
+    private void addTunnel(TunnelTemplate tunnel) {
         this.getTunnels().put(tunnel.getTunnelId(), tunnel);
     }
 
-    protected void removeBeetById(UUID beetId) {
+    private void removeBeetById(UUID beetId) {
         this.getBeete().remove(beetId);
     }
 
     private void removeTunnelById(UUID tunnelId) {
-
+        this.getTunnels().remove(tunnelId);
     }
 
-    protected void setCollisionManagementActive(Boolean collisionManagementActive) {
-        this.collisionManagementActive = collisionManagementActive;
+    private List<Collidable> getCollidables() {
+        List<Collidable> collidables = new ArrayList<>();
+        for (Collidable elem : this.getTunnels().values()) {
+            collidables.add(elem);
+        }
+        for (Collidable elem : this.getBeete().values()) {
+            collidables.add(elem);
+        }
+        return collidables;
     }
 
     @Override

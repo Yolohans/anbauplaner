@@ -12,6 +12,16 @@ public class BeetTemplateFactory {
         this.beet = new BeetTemplate();
     }
 
+    public BeetTemplateFactory withAckerId(UUID ackerId) {
+        this.beet.setAckerId(ackerId);
+        return this;
+    }
+
+    public BeetTemplateFactory withTunnelId(UUID tunnelId) {
+        this.beet.setTunnelId(tunnelId);
+        return this;
+    }
+
     public BeetTemplateFactory withName(Name name) {
         this.beet.setName(name);
         return this;
@@ -19,16 +29,6 @@ public class BeetTemplateFactory {
 
     public BeetTemplateFactory withShape(Shape shape) {
         this.beet.setShape(shape);
-        return this;
-    }
-
-    public BeetTemplateFactory withTunnel(UUID tunnelId) {
-        this.beet.setTunnelId(tunnelId);
-        return this;
-    }
-
-    public BeetTemplateFactory withAcker(UUID ackerId) {
-        this.beet.setAckerId(ackerId);
         return this;
     }
 

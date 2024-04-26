@@ -5,7 +5,6 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import org.apache.commons.lang3.Validate;
 
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -64,6 +63,36 @@ public final class Rectangle extends Shape {
     @Override
     public Shape replacePosition(Point position) {
         return new Rectangle(this.xLength, this.yLength, position);
+    }
+
+    @Override
+    public boolean collidesWith(Shape other) {
+        return other.collidesWithRectangle(this);
+    }
+
+    @Override
+    public boolean collidesWithRectangle(Rectangle other) {
+        boolean hasNoCollision =
+                this.getPosition().getX() > other.getPosition().getX() + other.getXLength() ||
+                this.getPosition().getX() + this.getXLength() < other.getPosition().getX() ||
+                this.getPosition().getY() > other.getPosition().getY() + other.getYLength() ||
+                this.getPosition().getY() + this.getYLength() < other.getPosition().getY();
+        return !hasNoCollision;
+    }
+
+    @Override
+    public boolean doesNotFitIn(Shape other) {
+        return other.doesNotFitInRectangle(this);
+    }
+
+    @Override
+    public boolean doesNotFitInRectangle(Rectangle other) {
+        boolean positionFits =
+                this.getPosition().getX() >= other.getPosition().getX() &&
+                this.getPosition().getY() >= other.getPosition().getY() &&
+                this.getPosition().getX() + this.getXLength() <= other.getPosition().getX() + other.getXLength() &&
+                this.getPosition().getY() + this.getYLength() <= other.getPosition().getY() + other.getYLength();
+        return !positionFits;
     }
 
     @Override

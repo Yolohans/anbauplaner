@@ -2,7 +2,6 @@ package de.dhbw.softwareengineering.anbauplaner.domain.shape;
 
 import jakarta.persistence.*;
 
-import java.util.List;
 import java.util.UUID;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -25,6 +24,14 @@ public abstract class Shape {
     public abstract Shape subtractPosition(Point position);
 
     public abstract Shape replacePosition(Point position);
+
+    public abstract boolean collidesWith(Shape other);
+
+    public abstract boolean collidesWithRectangle(Rectangle other);
+
+    public abstract boolean doesNotFitIn(Shape other);
+
+    public abstract boolean doesNotFitInRectangle(Rectangle other);
 
     @Override
     public abstract String toString();
