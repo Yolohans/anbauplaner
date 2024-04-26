@@ -1,9 +1,7 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.anbauplan;
 
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.AAcker;
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.ABeet;
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.ATunnel;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Name;
+import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.converters.NameAttributeConverter;
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
 import jakarta.persistence.*;
 
@@ -11,7 +9,23 @@ import java.util.HashMap;
 import java.util.UUID;
 
 @Entity
-public class Acker extends AAcker {
+public class Acker {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID ackerId;
+
+    @Convert(converter = NameAttributeConverter.class)
+    private Name name;
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name="shapeId", referencedColumnName = "shapeId")
+    private Shape shape;
+
+    @OneToMany(mappedBy = "acker", cascade=CascadeType.ALL)
+    private HashMap<UUID,Tunnel> tunnels;
+
+    @OneToMany(mappedBy = "acker")
+    private HashMap<UUID,Beet> beete;
+
     @ManyToOne
     @JoinColumn(name = "anbauplanId")
     protected Anbauplan anbauplan;
@@ -19,7 +33,10 @@ public class Acker extends AAcker {
     protected Acker() {}
 
     protected Acker(Name name, Shape shape, Anbauplan anbauplan) {
-        super(name,shape);
+        this.name = name;
+        this.shape = shape;
+        this.tunnels = new HashMap<UUID, Tunnel>();
+        this.beete = new HashMap<UUID, Beet>();
         this.anbauplan = anbauplan;
     }
 
@@ -31,95 +48,48 @@ public class Acker extends AAcker {
         this.anbauplan = anbauplan;
     }
 
-    protected void addTunnel(Tunnel tunnel) {
-        this.getTunnels().put(tunnel.getTunnelId(),tunnel);
+    public UUID getAckerId() {
+        return ackerId;
+    }
+
+    public Name getName() {
+        return name;
+    }
+
+    public Shape getShape() {
+        return shape;
+    }
+
+    public HashMap<UUID, Tunnel> getTunnels() {
+        return tunnels;
+    }
+
+    public HashMap<UUID, Beet> getBeete() {
+        return beete;
     }
 
     protected void addBeet(Beet beet) {
         this.getBeete().put(beet.getBeetId(), beet);
     }
 
-    protected void removeTunnel(Tunnel tunnel) {
-        this.getTunnels().remove(tunnel.getTunnelId());
+    protected void addTunnel(Tunnel tunnel) {
+        this.getTunnels().put(tunnel.getTunnelId(), tunnel);
     }
 
     protected void removeBeet(Beet beet) {
         this.getBeete().remove(beet.getBeetId());
     }
 
-    @Override
-    protected UUID getAckerId() {
-        return super.getAckerId();
-    }
-
-    @Override
-    protected Name getName() {
-        return super.getName();
-    }
-
-    @Override
-    protected Shape getShape() {
-        return super.getShape();
-    }
-
-    @Override
-    protected HashMap<UUID, ATunnel> getTunnels() {
-        return super.getTunnels();
-    }
-
-    @Override
-    protected HashMap<UUID, ABeet> getBeete() {
-        return super.getBeete();
-    }
-
-    @Override
-    protected void setName(Name name) {
-        super.setName(name);
-    }
-
-    @Override
-    protected void setShape(Shape shape) {
-        super.setShape(shape);
-    }
-
-    @Override
-    protected void setTunnels(HashMap<UUID, ATunnel> tunnels) {
-        super.setTunnels(tunnels);
-    }
-
-    @Override
-    protected void setBeete(HashMap<UUID, ABeet> beete) {
-        super.setBeete(beete);
-    }
-
-    @Override
-    protected void addBeet(ABeet beet) {
-        super.addBeet(beet);
-    }
-
-    @Override
-    protected void addTunnel(ATunnel tunnel) {
-        super.addTunnel(tunnel);
-    }
-
-    @Override
-    protected void removeBeet(ABeet beet) {
-        super.removeBeet(beet);
-    }
-
-    @Override
     protected void removeBeet(UUID beetId) {
-        super.removeBeet(beetId);
+        this.getBeete().remove(beetId);
     }
 
-    @Override
-    protected void removeTunnel(ATunnel tunnel) {
-        super.removeTunnel(tunnel);
+    protected void removeTunnel(Tunnel tunnel) {
+        this.getTunnels().remove(tunnel.getTunnelId());
     }
 
-    @Override
     protected void removeTunnel(UUID tunnelId) {
-        super.removeTunnel(tunnelId);
+        this.getTunnels().remove(tunnelId);
     }
 
     @Override

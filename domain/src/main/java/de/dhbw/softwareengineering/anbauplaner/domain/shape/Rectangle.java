@@ -39,8 +39,30 @@ public final class Rectangle extends Shape {
         return yLength;
     }
 
+    @Override
     public Point getPosition() {
         return position;
+    }
+
+    @Override
+    public Shape translatePosition(Point position) {
+        double x = this.getPosition().getX() + position.getX();
+        double y = this.getPosition().getY() + position.getY();
+        Point point = new Point(x,y);
+        return new Rectangle(this.xLength,this.yLength,point);
+    }
+
+    @Override
+    public Shape subtractPosition(Point position) {
+        double x = this.getPosition().getX() - position.getX();
+        double y = this.getPosition().getY() - position.getY();
+        Point point = new Point(x,y);
+        return new Rectangle(this.xLength,this.yLength,point);
+    }
+
+    @Override
+    public Shape replacePosition(Point position) {
+        return new Rectangle(this.xLength, this.yLength, position);
     }
 
     @Override

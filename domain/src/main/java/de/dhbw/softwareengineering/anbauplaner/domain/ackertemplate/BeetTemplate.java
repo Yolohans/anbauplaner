@@ -1,80 +1,101 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate;
 
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.AAcker;
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.ABeet;
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.ATunnel;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Name;
+import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.converters.NameAttributeConverter;
+import de.dhbw.softwareengineering.anbauplaner.domain.shape.Point;
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-public class BeetTemplate extends ABeet {
+public class BeetTemplate {
+    @Id
+    @GeneratedValue
+    private UUID beetId;
+    @Convert(converter = NameAttributeConverter.class)
+    private Name name;
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name="shapeId", referencedColumnName = "shapeId")
+    private Shape shape;
+
+    private UUID ackerId;
+
+    private UUID tunnelId;
+
     private LocalDateTime createdAt;
 
     protected BeetTemplate() {
         this.createdAt = LocalDateTime.now();
     }
 
-    public BeetTemplate(Name name, Shape shape, TunnelTemplate tunnel, AckerTemplate acker) {
-        super(name,shape,acker,tunnel);
+    public BeetTemplate(Name name, Shape shape, UUID tunnelId, UUID ackerId) {
+        this.name = name;
+        this.shape = shape;
+        this.ackerId = ackerId;
+        this.tunnelId = tunnelId;
         this.createdAt = LocalDateTime.now();
+    }
+
+    protected void detachFromTunnel(TunnelTemplate tunnel) {
+        if (this.tunnelId == tunnel.getTunnelId()) {
+            this.tunnelId = null;
+            this.ackerId = tunnel.getAckerId();
+            this.shape = shape.translatePosition(tunnel.getShape().getPosition());
+        }
+    }
+
+    protected void attachToTunnel(TunnelTemplate tunnel) {
+        this.ackerId = null;
+        this.tunnelId = tunnel.getTunnelId();
+        this.shape = shape.subtractPosition(tunnel.getShape().getPosition());
+    }
+
+    protected void attachToTunnel(TunnelTemplate tunnel, Point position) {
+        this.ackerId = null;
+        this.tunnelId = tunnel.getTunnelId();
+        this.shape = shape.replacePosition(position);
     }
 
     protected LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    @Override
-    protected UUID getBeetId() {
-        return super.getBeetId();
+    public UUID getBeetId() {
+        return beetId;
     }
 
-    @Override
-    protected Name getName() {
-        return super.getName();
+    public Name getName() {
+        return name;
     }
 
-    @Override
-    protected Shape getShape() {
-        return super.getShape();
+    public Shape getShape() {
+        return shape;
     }
 
-    @Override
-    protected AAcker getAcker() {
-        return super.getAcker();
+    public UUID getAckerId() {
+        return ackerId;
     }
 
-    @Override
-    protected ATunnel getTunnel() {
-        return super.getTunnel();
+    public UUID getTunnelId() {
+        return tunnelId;
     }
 
-    @Override
     protected void setName(Name name) {
-        super.setName(name);
+        this.name = name;
     }
 
-    @Override
     protected void setShape(Shape shape) {
-        super.setShape(shape);
+        this.shape = shape;
     }
 
-    @Override
-    protected void setTunnel(ATunnel tunnel) {
-        super.setTunnel(tunnel);
+    public void setAckerId(UUID ackerId) {
+        this.ackerId = ackerId;
     }
 
-    @Override
-    protected void setAcker(AAcker acker) {
-        super.setAcker(acker);
-    }
-
-    @Override
-    protected void removeTunnel() {
-        super.removeTunnel();
+    public void setTunnelId(UUID tunnelId) {
+        this.tunnelId = tunnelId;
     }
 
     @Override
@@ -84,8 +105,8 @@ public class BeetTemplate extends ABeet {
         sb.append(", beetId='").append(this.getBeetId()).append('\'');
         sb.append(", name=").append(this.getName());
         sb.append(", shape=").append(this.getShape());
-        sb.append(", acker=").append(this.getAcker());
-        sb.append(", tunnel=").append(this.getTunnel());
+        sb.append(", acker=").append(this.getAckerId());
+        sb.append(", tunnel=").append(this.getTunnelId());
         sb.append('}');
         return sb.toString();
     }

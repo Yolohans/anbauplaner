@@ -1,26 +1,40 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.anbauplan;
 
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.AAcker;
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.ABeet;
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.ATunnel;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Name;
+import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.converters.NameAttributeConverter;
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
-public class Beet extends ABeet {
+public class Beet {
+    @Id
+    @GeneratedValue
+    private UUID beetId;
+    @Convert(converter = NameAttributeConverter.class)
+    private Name name;
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name="shapeId", referencedColumnName = "shapeId")
+    private Shape shape;
+    @ManyToOne
+    @JoinColumn(name = "ackerId")
+    private Acker acker;
+    @ManyToOne
+    @JoinColumn(name = "tunnelId")
+    private Tunnel tunnel;
     @OneToMany
     private List<Belegung> Belegungen;
 
     protected Beet(){};
 
     protected Beet(Name name, Shape shape, Acker acker, Tunnel tunnel) {
-        super(name, shape, acker, tunnel);
+        this.name = name;
+        this.shape = shape;
+        this.acker = acker;
+        this.tunnel = tunnel;
         this.Belegungen = new ArrayList<Belegung>();
     }
 
@@ -40,49 +54,31 @@ public class Beet extends ABeet {
         this.Belegungen.remove(belegung);
     }
 
-    @Override
-    protected UUID getBeetId() {
-        return super.getBeetId();
+    public UUID getBeetId() {
+        return beetId;
     }
 
-    @Override
-    protected Name getName() {
-        return super.getName();
+    public Name getName() {
+        return name;
     }
 
-    @Override
-    protected Shape getShape() {
-        return super.getShape();
+    public Shape getShape() {
+        return shape;
     }
 
-    @Override
-    protected AAcker getAcker() {
-        return super.getAcker();
+    public Acker getAcker() {
+        return acker;
     }
 
-    @Override
-    protected ATunnel getTunnel() {
-        return super.getTunnel();
+    public Tunnel getTunnel() {
+        return tunnel;
     }
 
-    @Override
-    protected void setName(Name name) {
-        super.setName(name);
-    }
-
-    @Override
-    protected void setShape(Shape shape) {
-        super.setShape(shape);
-    }
-
-    @Override
-    protected void setTunnel(ATunnel tunnel) {
-        super.setTunnel(tunnel);
-    }
-
-    @Override
-    protected void setAcker(AAcker acker) {
-        super.setAcker(acker);
+    //TODO is this the way to remove tunnel?
+    // if every position is relative, must adjust shape --> new position
+    protected void removeTunnel() {
+        // more logic needed for shape of beet
+        this.tunnel = null;
     }
 
     @Override

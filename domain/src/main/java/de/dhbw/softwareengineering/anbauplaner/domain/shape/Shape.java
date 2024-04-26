@@ -17,6 +17,14 @@ public abstract class Shape {
         return shapeId;
     }
 
+    public abstract Point getPosition();
+
+    public abstract Shape translatePosition(Point position);
+
+    public abstract Shape subtractPosition(Point position);
+
+    public abstract Shape replacePosition(Point position);
+
     @Override
     public abstract String toString();
 

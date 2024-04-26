@@ -1,7 +1,5 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate.mocks;
 
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.ABeet;
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.ATunnel;
 import de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate.AckerTemplate;
 import de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate.BeetTemplate;
 import de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate.TunnelTemplate;
@@ -9,7 +7,6 @@ import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Name;
 import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -32,7 +29,7 @@ public class AckerTemplateMockBuilder {
     }
 
     public AckerTemplateMockBuilder withTunnels(TunnelTemplate... tunnels) {
-        HashMap<UUID, ATunnel> tunnelMap = new HashMap<>();
+        HashMap<UUID, TunnelTemplate> tunnelMap = new HashMap<>();
         for (TunnelTemplate tunnel : tunnels) {
             tunnelMap.put(UUID.randomUUID(), tunnel);
         }
@@ -41,7 +38,7 @@ public class AckerTemplateMockBuilder {
     }
 
     public AckerTemplateMockBuilder withBeete(BeetTemplate... beete) {
-        HashMap<UUID, ABeet> beetMap = new HashMap<>();
+        HashMap<UUID, BeetTemplate> beetMap = new HashMap<>();
         for (BeetTemplate beet : beete) {
             beetMap.put(UUID.randomUUID(), beet);
         }

@@ -1,8 +1,9 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate.mocks;
 
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.AAcker;
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.ATunnel;
+import de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate.AckerTemplate;
 import de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate.BeetTemplate;
+import de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate.TunnelTemplate;
+import de.dhbw.softwareengineering.anbauplaner.domain.anbauplan.Tunnel;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Name;
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
 import org.mockito.Mockito;
@@ -14,28 +15,28 @@ public class BeetTemplateMockBuilder {
 
     private class BeetTemplateCopy extends BeetTemplate{
         @Override
-        protected UUID getBeetId() {
+        public UUID getBeetId() {
             return super.getBeetId();
         }
 
         @Override
-        protected Name getName() {
+        public Name getName() {
             return super.getName();
         }
 
         @Override
-        protected Shape getShape() {
+        public Shape getShape() {
             return super.getShape();
         }
 
         @Override
-        protected AAcker getAcker() {
-            return super.getAcker();
+        public UUID getAckerId() {
+            return super.getAckerId();
         }
 
         @Override
-        protected ATunnel getTunnel() {
-            return super.getTunnel();
+        public UUID getTunnelId() {
+            return super.getTunnelId();
         }
 
         @Override
@@ -46,16 +47,6 @@ public class BeetTemplateMockBuilder {
         @Override
         protected void setShape(Shape shape) {
             super.setShape(shape);
-        }
-
-        @Override
-        protected void setTunnel(ATunnel tunnel) {
-            super.setTunnel(tunnel);
-        }
-
-        @Override
-        protected void setAcker(AAcker acker) {
-            super.setAcker(acker);
         }
 
         @Override
@@ -90,13 +81,13 @@ public class BeetTemplateMockBuilder {
         return this;
     }
 
-    public BeetTemplateMockBuilder withAcker(AAcker acker) {
-        Mockito.when(mockBeetTemplate.getAcker()).thenReturn(acker);
+    public BeetTemplateMockBuilder withAckerId(UUID ackerId) {
+        Mockito.when(mockBeetTemplate.getAckerId()).thenReturn(ackerId);
         return this;
     }
 
-    public BeetTemplateMockBuilder withTunnel(ATunnel tunnel) {
-        Mockito.when(mockBeetTemplate.getTunnel()).thenReturn(tunnel);
+    public BeetTemplateMockBuilder withTunnelId(UUID tunnelId) {
+        Mockito.when(mockBeetTemplate.getTunnelId()).thenReturn(tunnelId);
         return this;
     }
 

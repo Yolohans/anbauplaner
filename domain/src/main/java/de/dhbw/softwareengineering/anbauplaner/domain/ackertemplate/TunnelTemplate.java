@@ -1,27 +1,42 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate;
 
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.AAcker;
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.ABeet;
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.ATunnel;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Name;
+import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.converters.NameAttributeConverter;
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
-public class TunnelTemplate extends ATunnel {
+public class TunnelTemplate {
+    @Id
+    @GeneratedValue
+    private UUID tunnelId;
+
+    @Convert(converter = NameAttributeConverter.class)
+    private Name name;
+
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name="shapeId", referencedColumnName = "shapeId")
+    private Shape shape;
+
+    private UUID ackerId;
+
+    @OneToMany
+    protected HashMap<UUID, BeetTemplate> beete;
+
     private LocalDateTime createdAt;
 
     protected TunnelTemplate() {
     }
 
-    protected TunnelTemplate(Name name, Shape shape, AckerTemplate acker) {
-        super(name,shape,acker);
+    protected TunnelTemplate(Name name, Shape shape, UUID ackerId) {
+        this.name = name;
+        this.shape = shape;
+        this.ackerId = ackerId;
+        this.beete = new HashMap<UUID, BeetTemplate>();
         this.createdAt = LocalDateTime.now();
     }
 
@@ -29,64 +44,44 @@ public class TunnelTemplate extends ATunnel {
         return createdAt;
     }
 
-    @Override
-    protected UUID getTunnelId() {
-        return super.getTunnelId();
+    public UUID getTunnelId() {
+        return tunnelId;
     }
 
-    @Override
-    protected Name getName() {
-        return super.getName();
+    public Name getName() {
+        return name;
     }
 
-    @Override
-    protected Shape getShape() {
-        return super.getShape();
+    public Shape getShape() {
+        return shape;
     }
 
-    @Override
-    protected AAcker getAcker() {
-        return super.getAcker();
+    public UUID getAckerId() {
+        return ackerId;
     }
 
-    @Override
-    public HashMap<UUID, ABeet> getBeete() {
-        return super.getBeete();
+    public HashMap<UUID, BeetTemplate> getBeete() {
+        return beete;
     }
 
-    @Override
     protected void setName(Name name) {
-        super.setName(name);
+        this.name = name;
     }
 
-    @Override
     protected void setShape(Shape shape) {
-        super.setShape(shape);
+        this.shape = shape;
     }
 
-    @Override
-    protected void setAcker(AAcker acker) {
-        super.setAcker(acker);
+    public void setAckerId(UUID ackerId) {
+        this.ackerId = ackerId;
     }
 
-    @Override
-    protected void setBeete(HashMap<UUID, ABeet> beete) {
-        super.setBeete(beete);
+    protected void add(BeetTemplate beet) {
+        this.beete.put(beet.getBeetId(),beet);
     }
 
-    @Override
-    public void add(ABeet beet) {
-        super.add(beet);
-    }
-
-    @Override
-    public void remove(ABeet beet) {
-        super.remove(beet);
-    }
-
-    @Override
-    public void remove(UUID beetId) {
-        super.remove(beetId);
+    protected void removeBeetById(UUID beetId) {
+        this.beete.remove(beetId);
     }
 
     @Override
@@ -96,7 +91,7 @@ public class TunnelTemplate extends ATunnel {
         sb.append(", tunnelId='").append(this.getTunnelId()).append('\'');
         sb.append(", name=").append(this.getTunnelId());
         sb.append(", shape=").append(this.getShape());
-        sb.append(", acker=").append(this.getAcker());
+        sb.append(", acker=").append(this.getAckerId());
         sb.append(", Beete=").append(this.getBeete());
         sb.append('}');
         return sb.toString();

@@ -1,27 +1,50 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate;
 
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.AAcker;
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.ABeet;
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.ATunnel;
-import de.dhbw.softwareengineering.anbauplaner.domain.anbauplan.Tunnel;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Name;
+import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.converters.NameAttributeConverter;
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Point;
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Rectangle;
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.UUID;
 
 @Entity
-public class AckerTemplate extends AAcker {
+public class AckerTemplate {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID ackerId;
+
+    @Convert(converter = NameAttributeConverter.class)
+    private Name name;
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name="shapeId", referencedColumnName = "shapeId")
+    private Shape shape;
+
+    @OneToMany(mappedBy = "acker", cascade=CascadeType.ALL)
+    private HashMap<UUID,TunnelTemplate> tunnels;
+
+    @OneToMany(mappedBy = "acker")
+    private HashMap<UUID,BeetTemplate> beete;
+
+    @ElementCollection
+    @CollectionTable(name = "beet_id_to_tunnel_id_map", joinColumns = @JoinColumn(name = "tunnel_id"))
+    @MapKeyColumn(name = "beet_id")
+    @Column(name = "tunnel_id")
+    private HashMap<UUID,UUID> beetIdToTunnelIdMap;
+
     private LocalDateTime createdAt;
     private LocalDateTime lastUpdateAt;
     private Boolean collisionManagementActive;
 
     public AckerTemplate(Name name, Shape shape) {
-        super(name, shape);
+        this.name = name;
+        this.shape = shape;
+        this.tunnels = new HashMap<UUID,TunnelTemplate>();
+        this.beete = new HashMap<UUID,BeetTemplate>();
         LocalDateTime now = LocalDateTime.now();
         this.createdAt = now;
         this.lastUpdateAt = now;
@@ -36,157 +59,145 @@ public class AckerTemplate extends AAcker {
 
 
     public void createTunnel(Name name, Shape shape) {
-        TunnelTemplate tunnel = new TunnelTemplate(name, shape, this);
+        TunnelTemplate tunnel = new TunnelTemplate(name, shape, this.getAckerId());
         this.addTunnel(tunnel);
     }
 
     public void createBeetInAcker(Name name, Shape shape) {
         BeetTemplate beet = new BeetTemplateFactory()
-                .withAcker(this)
+                .withAcker(this.getAckerId())
                 .withName(name)
                 .withShape(shape)
                 .build();
         this.addBeet(beet);
     }
 
-    public void createBeetInTunnel(Name name, Shape shape, TunnelTemplate tunnel) {
+    public void createBeetInTunnel(Name name, Shape shape, UUID tunnelId) {
         BeetTemplate beet = new BeetTemplateFactory()
-                .withTunnel(tunnel)
+                .withTunnel(tunnelId)
                 .withName(name)
                 .withShape(shape)
                 .build();
-        tunnel.add(beet);
+        this.getTunnelById(tunnelId).add(beet);
     }
 
-    public void deleteBeet(BeetTemplate beet) {
-        if (beet.getTunnel() != null) {
-            beet.getTunnel().remove(beet);
-        }
-        if (beet.getAcker() != null) {
-            this.removeBeet(beet);
+    public void deleteBeet(UUID beetId) {
+        UUID tunnelId = this.getTunnelIdByBeetId(beetId);
+
+        if (tunnelId != null) {
+            this.getTunnelById(tunnelId).removeBeetById(beetId);
+        } else if (this.getBeetById(beetId) != null) {
+            this.removeBeetById(beetId);
         }
     }
 
     public void deleteTunnel(UUID tunnelId, boolean keepBeete) {
-        ATunnel tunnel = this.getTunnels().get(tunnelId);
-        HashMap<UUID,ABeet> beete = tunnel.getBeete();
+        TunnelTemplate tunnel = this.getTunnelById(tunnelId);
+
         if (keepBeete) {
-            for (HashMap.Entry<UUID,ABeet> beet : tunnel.getBeete().entrySet()) {
-                BeetTemplate beetTemplate = (BeetTemplate) beet;
-                beetTemplate.removeTunnel();
+            for (HashMap.Entry<UUID, BeetTemplate> entry : tunnel.getBeete().entrySet()) {
+                BeetTemplate beet = entry.getValue();
+                beet.detachFromTunnel(tunnel);
             }
         }
-        this.removeTunnel(tunnelId);
+        this.removeTunnelById(tunnelId);
     }
 
+    public void attachBeetToTunnelAtPosition(UUID beetId, UUID tunnelId, Point position) {
+        //--> collision management
+        BeetTemplate beet = this.getBeetById(beetId);
+        TunnelTemplate formerTunnel = this.getTunnelById(this.getTunnelIdByBeetId(beetId));
+        TunnelTemplate newTunnel = this.getTunnelById(tunnelId);
+
+        if (newTunnel != null && beet != null) {
+            if (formerTunnel != null) {
+                formerTunnel.removeBeetById(beetId);
+            }
+            newTunnel.add(beet);
+            beet.attachToTunnel(newTunnel, position);
+        }
+    }
+
+    public void moveBeetToPosition(UUID beetId, Point position) {
+        //collision --> in acker
+        //outofbounds --> in tunnel
+    }
 
     public void moveTunnelToPosition(UUID tunnelId, Point position) {
-        //collision
-        //outofbounds
+        //collision --> in acker
+        //outofbounds --> in tunnel
     }
 
-    //TODO tunnelId
-    public void moveBeetToTunnel(BeetTemplate beet, TunnelTemplate tunnel) {
-        if (beet.getTunnel() != null) {
-            beet.getTunnel().remove(beet);
-        }
-        beet.setTunnel(tunnel);
-        tunnel.add(beet);
-    }
-
-    protected LocalDateTime getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    protected LocalDateTime getLastUpdateAt() {
+    public LocalDateTime getLastUpdateAt() {
         return lastUpdateAt;
     }
 
-    protected Boolean getCollisionManagementActive() {
+    public Boolean getCollisionManagementActive() {
         return collisionManagementActive;
     }
 
-    protected void setLastUpdateAt() {
-        this.lastUpdateAt = LocalDateTime.now();
+    public UUID getAckerId() {
+        return ackerId;
+    }
+
+    public Name getName() {
+        return name;
+    }
+
+    public Shape getShape() {
+        return shape;
+    }
+
+    public TunnelTemplate getTunnelById(UUID tunnelId) {
+        return this.getTunnels().get(tunnelId);
+    }
+
+    public BeetTemplate getBeetById(UUID beetId) {
+        return this.getBeete().get(beetId);
+    }
+
+    public UUID getTunnelIdByBeetId(UUID beetId){
+        return this.beetIdToTunnelIdMap.get(beetId);
+    }
+
+    public HashMap<UUID, TunnelTemplate> getTunnels() {
+        return tunnels;
+    }
+
+    public HashMap<UUID, BeetTemplate> getBeete() {
+        return beete;
+    }
+
+    protected void setName(Name name) {
+        this.name = name;
+    }
+
+    protected void setShape(Shape shape) {
+        this.shape = shape;
+    }
+
+    protected void addBeet(BeetTemplate beet) {
+        this.getBeete().put(beet.getBeetId(), beet);
+    }
+
+    protected void addTunnel(TunnelTemplate tunnel) {
+        this.getTunnels().put(tunnel.getTunnelId(), tunnel);
+    }
+
+    protected void removeBeetById(UUID beetId) {
+        this.getBeete().remove(beetId);
+    }
+
+    private void removeTunnelById(UUID tunnelId) {
+
     }
 
     protected void setCollisionManagementActive(Boolean collisionManagementActive) {
         this.collisionManagementActive = collisionManagementActive;
-    }
-
-    @Override
-    protected UUID getAckerId() {
-        return super.getAckerId();
-    }
-
-    @Override
-    protected Name getName() {
-        return super.getName();
-    }
-
-    @Override
-    protected Shape getShape() {
-        return super.getShape();
-    }
-
-    @Override
-    protected HashMap<UUID, ATunnel> getTunnels() {
-        return super.getTunnels();
-    }
-
-    @Override
-    protected HashMap<UUID, ABeet> getBeete() {
-        return super.getBeete();
-    }
-
-    @Override
-    protected void setName(Name name) {
-        super.setName(name);
-    }
-
-    @Override
-    protected void setShape(Shape shape) {
-        super.setShape(shape);
-    }
-
-    @Override
-    protected void setTunnels(HashMap<UUID, ATunnel> tunnels) {
-        super.setTunnels(tunnels);
-    }
-
-    @Override
-    protected void setBeete(HashMap<UUID, ABeet> beete) {
-        super.setBeete(beete);
-    }
-
-    @Override
-    protected void addBeet(ABeet beet) {
-        super.addBeet(beet);
-    }
-
-    @Override
-    protected void addTunnel(ATunnel tunnel) {
-        super.addTunnel(tunnel);
-    }
-
-    @Override
-    protected void removeBeet(ABeet beet) {
-        super.removeBeet(beet);
-    }
-
-    @Override
-    protected void removeBeet(UUID beetId) {
-        super.removeBeet(beetId);
-    }
-
-    @Override
-    protected void removeTunnel(ATunnel tunnel) {
-        super.removeTunnel(tunnel);
-    }
-
-    @Override
-    protected void removeTunnel(UUID tunnelId) {
-        super.removeTunnel(tunnelId);
     }
 
     @Override

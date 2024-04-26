@@ -3,6 +3,8 @@ package de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Name;
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
 
+import java.util.UUID;
+
 public class BeetTemplateFactory {
     private BeetTemplate beet;
 
@@ -20,13 +22,13 @@ public class BeetTemplateFactory {
         return this;
     }
 
-    public BeetTemplateFactory withTunnel(TunnelTemplate tunnel) {
-        this.beet.setTunnel(tunnel);
+    public BeetTemplateFactory withTunnel(UUID tunnelId) {
+        this.beet.setTunnelId(tunnelId);
         return this;
     }
 
-    public BeetTemplateFactory withAcker(AckerTemplate acker) {
-        this.beet.setAcker(acker);
+    public BeetTemplateFactory withAcker(UUID ackerId) {
+        this.beet.setAckerId(ackerId);
         return this;
     }
 

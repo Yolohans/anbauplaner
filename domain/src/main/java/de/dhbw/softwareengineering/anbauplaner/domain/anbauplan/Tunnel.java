@@ -1,66 +1,71 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.anbauplan;
 
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.AAcker;
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.ABeet;
-import de.dhbw.softwareengineering.anbauplaner.domain.ackerabstraction.ATunnel;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Name;
+import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.converters.NameAttributeConverter;
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
-public class Tunnel extends ATunnel {
+public class Tunnel {
+    @Id
+    @GeneratedValue
+    private UUID tunnelId;
+
+    @Convert(converter = NameAttributeConverter.class)
+    private Name name;
+
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name="shapeId", referencedColumnName = "shapeId")
+    private Shape shape;
+
+    @ManyToOne
+    @JoinColumn(name = "ackerId")
+    private Acker acker;
+
+    @OneToMany(mappedBy = "tunnel")
+    protected HashMap<UUID, Beet> beete;
+
     protected Tunnel() {}
     protected Tunnel(Name name, Shape shape, Acker acker) {
-        super(name, shape, acker);
+        this.name = name;
+        this.shape = shape;
+        this.acker = acker;
+        this.beete = new HashMap<UUID, Beet>();
     }
 
-    @Override
-    protected UUID getTunnelId() {
-        return super.getTunnelId();
+    public UUID getTunnelId() {
+        return tunnelId;
     }
 
-    @Override
-    protected Name getName() {
-        return super.getName();
+    public Name getName() {
+        return name;
     }
 
-    @Override
-    protected Shape getShape() {
-        return super.getShape();
+    public Shape getShape() {
+        return shape;
     }
 
-    @Override
-    protected AAcker getAcker() {
-        return super.getAcker();
+    public Acker getAcker() {
+        return acker;
     }
 
-    @Override
-    public HashMap<UUID, ABeet> getBeete() {
-        return super.getBeete();
+    public HashMap<UUID, Beet> getBeete() {
+        return beete;
     }
 
-    @Override
     protected void setName(Name name) {
-        super.setName(name);
+        this.name = name;
     }
 
-    @Override
     protected void setShape(Shape shape) {
-        super.setShape(shape);
+        this.shape = shape;
     }
 
-    @Override
-    protected void setAcker(AAcker acker) {
-        super.setAcker(acker);
-    }
-
-    @Override
-    protected void setBeete(HashMap<UUID, ABeet> beete) {
-        super.setBeete(beete);
+    protected void setAcker(Acker acker) {
+        this.acker = acker;
     }
 
     @Override
