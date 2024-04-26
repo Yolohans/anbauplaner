@@ -2,6 +2,7 @@ package de.dhbw.softwareengineering.anbauplaner.domain.shape;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.UUID;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

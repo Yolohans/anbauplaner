@@ -5,6 +5,7 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import org.apache.commons.lang3.Validate;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity

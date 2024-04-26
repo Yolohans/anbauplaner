@@ -2,6 +2,7 @@ package de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate;
 
 import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Name;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.converters.NameAttributeConverter;
+import de.dhbw.softwareengineering.anbauplaner.domain.shape.Point;
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
 import jakarta.persistence.*;
 
@@ -38,6 +39,10 @@ public class TunnelTemplate {
         this.ackerId = ackerId;
         this.beete = new HashMap<UUID, BeetTemplate>();
         this.createdAt = LocalDateTime.now();
+    }
+
+    protected void moveToPosition(Point position) {
+        shape = shape.replacePosition(position);
     }
 
     protected LocalDateTime getCreatedAt() {

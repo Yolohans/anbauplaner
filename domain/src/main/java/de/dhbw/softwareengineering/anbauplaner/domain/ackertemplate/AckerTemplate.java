@@ -59,20 +59,25 @@ public class AckerTemplate {
 
 
     public void createTunnel(Name name, Shape shape) {
+        //validate is in bounds
+        //validate collision
         TunnelTemplate tunnel = new TunnelTemplate(name, shape, this.getAckerId());
         this.addTunnel(tunnel);
     }
 
     public void createBeetInAcker(Name name, Shape shape) {
+        //validate is in bounds
+        //validate collision
         BeetTemplate beet = new BeetTemplateFactory()
-                .withAcker(this.getAckerId())
-                .withName(name)
+                .withAcker(this.getAckerId())                .withName(name)
                 .withShape(shape)
                 .build();
         this.addBeet(beet);
     }
 
     public void createBeetInTunnel(Name name, Shape shape, UUID tunnelId) {
+        //validate is in bounds
+        //validate collision
         BeetTemplate beet = new BeetTemplateFactory()
                 .withTunnel(tunnelId)
                 .withName(name)
@@ -105,6 +110,7 @@ public class AckerTemplate {
 
     public void attachBeetToTunnelAtPosition(UUID beetId, UUID tunnelId, Point position) {
         //--> collision management
+        //validate is in bounds
         BeetTemplate beet = this.getBeetById(beetId);
         TunnelTemplate formerTunnel = this.getTunnelById(this.getTunnelIdByBeetId(beetId));
         TunnelTemplate newTunnel = this.getTunnelById(tunnelId);
@@ -119,13 +125,20 @@ public class AckerTemplate {
     }
 
     public void moveBeetToPosition(UUID beetId, Point position) {
-        //collision --> in acker
-        //outofbounds --> in tunnel
+        UUID tunnelId = this.getTunnelIdByBeetId(beetId);
+        BeetTemplate beet = this.getBeetById(beetId);
+        if (tunnelId != null) {
+            //TODO Validate tunnel_shape can hold beet_shape at new position.
+        } else {
+            // TODO Validate acker_shape can hold beet_shape at new position.
+        }
+        beet.moveToPosition(position);
     }
 
     public void moveTunnelToPosition(UUID tunnelId, Point position) {
-        //collision --> in acker
-        //outofbounds --> in tunnel
+        TunnelTemplate tunnel = this.getTunnelById(tunnelId);
+        //TODO Validate acker_shape can hold tunnel_shape
+        tunnel.moveToPosition(position);
     }
 
     public LocalDateTime getCreatedAt() {
@@ -172,11 +185,12 @@ public class AckerTemplate {
         return beete;
     }
 
-    protected void setName(Name name) {
+    public void changeName(Name name) {
         this.name = name;
     }
 
-    protected void setShape(Shape shape) {
+    public void changeShape(Shape shape) {
+        //TODO validate that new acker_shape can hold its elements
         this.shape = shape;
     }
 

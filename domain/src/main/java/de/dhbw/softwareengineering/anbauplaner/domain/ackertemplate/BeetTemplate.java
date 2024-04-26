@@ -58,6 +58,10 @@ public class BeetTemplate {
         this.shape = shape.replacePosition(position);
     }
 
+    protected void moveToPosition(Point position) {
+        this.shape = this.shape.replacePosition(position);
+    }
+
     protected LocalDateTime getCreatedAt() {
         return createdAt;
     }
