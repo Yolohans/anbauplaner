@@ -1,12 +1,13 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.shape;
 
+import de.dhbw.softwareengineering.anbauplaner.domain.domainservices.Collidable;
 import jakarta.persistence.*;
 
 import java.util.UUID;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "shape_type")
-public abstract class Shape {
+public abstract class Shape implements Collidable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID shapeId;

@@ -81,6 +81,11 @@ public final class Rectangle extends Shape {
     }
 
     @Override
+    public Shape getShape() {
+        return this;
+    }
+
+    @Override
     public boolean doesNotFitIn(Shape other) {
         return other.doesNotFitInRectangle(this);
     }

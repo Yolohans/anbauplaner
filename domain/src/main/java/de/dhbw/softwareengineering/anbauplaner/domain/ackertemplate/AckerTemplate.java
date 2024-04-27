@@ -77,6 +77,14 @@ public class AckerTemplate implements Collidable {
     }
 
     public void createBeetInAcker(Name name, Shape shape) {
+        if (shape.doesNotFitInto(this)) {
+            throw new ChildDoesNotFitException(shape,this,"Position and dimension of the beet exceed the acker's dimensions.");
+        }
+
+        List<Collidable> collidables = getCollidables();
+        if (!shape.collidesWith(collidables).isEmpty()) {
+            throw new CollisionException(shape, collidables, "Beet collides with other tunnels or beete.");
+        }
 
         BeetTemplate beet = new BeetTemplateFactory()
                 .withAckerId(this.getAckerId())
@@ -84,28 +92,29 @@ public class AckerTemplate implements Collidable {
                 .withShape(shape)
                 .build();
 
-        if (beet.doesNotFitInto(this)) {
-            throw new ChildDoesNotFitException(beet,this,"Position and dimension of the beet exceed the acker's dimensions.");
-        }
-
-        List<Collidable> collidables = getCollidables();
-        if (!beet.collidesWith(collidables).isEmpty()) {
-            throw new CollisionException(beet, collidables, "Beet collides with other tunnels or beete.");
-        }
-
         this.addBeet(beet);
     }
 
-
-
     public void createBeetInTunnel(Name name, Shape shape, UUID tunnelId) {
+        TunnelTemplate tunnel = this.getTunnelById(tunnelId);
+
+        if (shape.doesNotFitInto(tunnel)) {
+            throw new ChildDoesNotFitException(shape,this,"Position and dimension of the beet's shape exceed the acker's dimensions.");
+        }
+
+        List<Collidable> collidables = tunnel.getCollidables();
+        if (!shape.collidesWith(collidables).isEmpty()) {
+            throw new CollisionException(shape, collidables, "The beet's shape collides with other beete.");
+        }
+
         BeetTemplate beet = new BeetTemplateFactory()
                 .withTunnelId(tunnelId)
                 .withName(name)
                 .withShape(shape)
                 .build();
 
-        this.getTunnelById(tunnelId).attachBeetAtPosition(beet, shape.getPosition());
+        tunnel.createBeetAtPosition(beet);
+        this.beetIdToTunnelIdMap.put(beet.getBeetId(),tunnelId);
     }
 
     public void deleteBeet(UUID beetId) {
@@ -130,20 +139,19 @@ public class AckerTemplate implements Collidable {
         this.removeTunnelById(tunnelId);
     }
 
-    public void attachBeetToTunnelAtPosition(UUID beetId, UUID tunnelId, Point position) {
-        //--> collision management
-        //validate is in bounds
+    public void attachBeetToTunnelAtPosition(UUID beetId, UUID targetTunnelId, Point position) {
+        // collision and inbound validation in TunnelTemplate --> shall I put it here?
         BeetTemplate beet = this.getBeetById(beetId);
-        TunnelTemplate formerTunnel = this.getTunnelById(this.getTunnelIdByBeetId(beetId));
-        TunnelTemplate newTunnel = this.getTunnelById(tunnelId);
+        TunnelTemplate sourceTunnel = this.getTunnelById(this.getTunnelIdByBeetId(beetId));
+        TunnelTemplate targetTunnel = this.getTunnelById(targetTunnelId);
 
-        if (newTunnel != null && beet != null) {
-            //TODO validate shape not beet; adjust method attachBeet to fit to cases attachToPosition and createBeetAtTunnel
-            newTunnel.attachBeetAtPosition(beet, position);
-            if (formerTunnel != null) {
-                formerTunnel.removeBeetById(beetId);
+        if (targetTunnel != null && beet != null) {
+            targetTunnel.attachBeetAtPosition(beet, position);
+            if (sourceTunnel != null) {
+                sourceTunnel.removeBeetById(beetId);
             }
-            beet.attachToTunnel(newTunnel, position);
+            beet.attachToTunnel(targetTunnel, position);
+            this.beetIdToTunnelIdMap.put(beetId,targetTunnelId);
         }
     }
 
@@ -168,9 +176,26 @@ public class AckerTemplate implements Collidable {
         this.name = name;
     }
 
-    public void changeShape(Shape shape) {
+    public void changeDimension(double x, double y) {
         //TODO validate that new acker_shape can hold its elements
-        this.shape = shape;
+        Shape redimensionedShape = new Rectangle(x,y,this.shape.getPosition());
+
+        List<Collidable> collidables = this.getCollidables();
+        /*if (!shape.collidesWith(collidables).isEmpty()) {
+            throw new CollisionException(shape, collidables, "The beet's shape collides with other beete.");
+        }*/
+
+        //TODO end. I did already think of checking that every collidable in acker fits into shape.
+
+        this.shape = redimensionedShape;
+    }
+
+    public void changeTunnelDimension(double x, double y, UUID tunnelId) {
+        //TODO
+    }
+
+    public void changeBeetDimension(double x, double y, UUID beetId) {
+        //TODO
     }
 
     public LocalDateTime getCreatedAt() {
