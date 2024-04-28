@@ -35,12 +35,6 @@ public class AckerTemplate implements Collidable {
     @OneToMany(mappedBy = "acker")
     private HashMap<UUID,BeetTemplate> beete;
 
-    @ElementCollection
-    @CollectionTable(name = "beet_id_to_tunnel_id_map", joinColumns = @JoinColumn(name = "tunnel_id"))
-    @MapKeyColumn(name = "beet_id")
-    @Column(name = "tunnel_id")
-    private HashMap<UUID,UUID> beetIdToTunnelIdMap;
-
     private LocalDateTime createdAt;
     private LocalDateTime lastUpdateAt;
 
@@ -114,11 +108,10 @@ public class AckerTemplate implements Collidable {
                 .build();
 
         tunnel.createBeetAtPosition(beet);
-        this.beetIdToTunnelIdMap.put(beet.getBeetId(),tunnelId);
     }
 
     public void deleteBeet(UUID beetId) {
-        UUID tunnelId = this.getTunnelIdByBeetId(beetId);
+        UUID tunnelId = this.getBeetById(beetId).getTunnelId();
 
         if (tunnelId != null) {
             this.getTunnelById(tunnelId).removeBeetById(beetId);
@@ -142,7 +135,7 @@ public class AckerTemplate implements Collidable {
     public void attachBeetToTunnelAtPosition(UUID beetId, UUID targetTunnelId, Point position) {
         // collision and inbound validation in TunnelTemplate --> shall I put it here?
         BeetTemplate beet = this.getBeetById(beetId);
-        TunnelTemplate sourceTunnel = this.getTunnelById(this.getTunnelIdByBeetId(beetId));
+        TunnelTemplate sourceTunnel = this.getTunnelById(beet.getTunnelId());
         TunnelTemplate targetTunnel = this.getTunnelById(targetTunnelId);
 
         if (targetTunnel != null && beet != null) {
@@ -151,14 +144,14 @@ public class AckerTemplate implements Collidable {
                 sourceTunnel.removeBeetById(beetId);
             }
             beet.attachToTunnel(targetTunnel, position);
-            this.beetIdToTunnelIdMap.put(beetId,targetTunnelId);
         }
     }
 
     public void moveBeetToPosition(UUID beetId, Point position) {
-        UUID tunnelId = this.getTunnelIdByBeetId(beetId);
         BeetTemplate beet = this.getBeetById(beetId);
+        UUID tunnelId = beet.getTunnelId();
         if (tunnelId != null) {
+            TunnelTemplate tunnel = this.getTunnelById(tunnelId);
             //TODO Validate tunnel_shape can hold beet_shape at new position.
         } else {
             // TODO Validate acker_shape can hold beet_shape at new position.
@@ -225,10 +218,6 @@ public class AckerTemplate implements Collidable {
 
     public BeetTemplate getBeetById(UUID beetId) {
         return this.getBeete().get(beetId);
-    }
-
-    public UUID getTunnelIdByBeetId(UUID beetId){
-        return this.beetIdToTunnelIdMap.get(beetId);
     }
 
     public HashMap<UUID, TunnelTemplate> getTunnels() {
