@@ -7,11 +7,13 @@ import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.conver
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 public class Anbauplan {
     @Id
-    private long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID anbauplanId;
 
     @Convert(converter = NameAttributeConverter.class)
     private Name name;
@@ -33,8 +35,8 @@ public class Anbauplan {
         this.businessYear = businessYear;
     }
 
-    public long getId() {
-        return id;
+    public UUID getAnbauplanId() {
+        return anbauplanId;
     }
 
     public Name getName() {
@@ -68,7 +70,7 @@ public class Anbauplan {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Anbauplan{");
-        sb.append("id=").append(id);
+        sb.append("id=").append(anbauplanId);
         sb.append(", name=").append(name);
         sb.append(", productive=").append(productive);
         sb.append(", businessYear=").append(businessYear);

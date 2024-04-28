@@ -29,10 +29,10 @@ public class AckerTemplate implements Collidable {
     @JoinColumn(name="shapeId", referencedColumnName = "shapeId")
     private Shape shape;
 
-    @OneToMany(mappedBy = "acker", cascade=CascadeType.ALL)
+    @OneToMany(mappedBy = "ackerId", cascade=CascadeType.ALL)
     private HashMap<UUID,TunnelTemplate> tunnels;
 
-    @OneToMany(mappedBy = "acker")
+    @OneToMany(mappedBy = "ackerId")
     private HashMap<UUID,BeetTemplate> beete;
 
     private LocalDateTime createdAt;
