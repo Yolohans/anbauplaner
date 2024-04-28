@@ -1,5 +1,6 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate;
 
+import de.dhbw.softwareengineering.anbauplaner.domain.anbauplan.Beet;
 import de.dhbw.softwareengineering.anbauplaner.domain.domainservices.Collidable;
 import de.dhbw.softwareengineering.anbauplaner.domain.domainservices.exceptions.ChildDoesNotFitException;
 import de.dhbw.softwareengineering.anbauplaner.domain.domainservices.exceptions.CollisionException;
@@ -70,6 +71,21 @@ public class TunnelTemplate implements Collidable {
         this.beete.put(beet.getBeetId(), beet);
     }
 
+    protected void moveBeetToPosition(BeetTemplate beet, Point targetPosition) {
+        Shape targetShape = beet.getShape().replacePosition(targetPosition);
+
+        if (targetShape.doesNotFitInto(this)) {
+            throw new ChildDoesNotFitException(beet,this,"The beet does not fit at the targeted position.");
+        }
+
+        List<Collidable> collidables = getCollidables();
+        if (!targetShape.collidesWith(collidables).isEmpty()) {
+            throw new CollisionException(beet, collidables, "The beet collides with other beete at the targeted position.");
+        }
+
+        beet.setShape(targetShape);
+    }
+
     protected void removeBeetById(UUID beetId) {
         this.beete.remove(beetId);
     }
@@ -107,7 +123,7 @@ public class TunnelTemplate implements Collidable {
         this.shape = shape;
     }
 
-    public void setAckerId(UUID ackerId) {
+    protected void setAckerId(UUID ackerId) {
         this.ackerId = ackerId;
     }
 

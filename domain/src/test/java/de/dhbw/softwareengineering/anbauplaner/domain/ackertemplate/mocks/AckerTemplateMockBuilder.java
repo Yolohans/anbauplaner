@@ -4,6 +4,7 @@ import de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate.AckerTemplat
 import de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate.BeetTemplate;
 import de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate.TunnelTemplate;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Name;
+import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
 import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
@@ -25,6 +26,11 @@ public class AckerTemplateMockBuilder {
 
     public AckerTemplateMockBuilder withName(Name name) {
         Mockito.when(mockAckerTemplate.getName()).thenReturn(name);
+        return this;
+    }
+
+    public AckerTemplateMockBuilder withShape(Shape shape) {
+        Mockito.when(mockAckerTemplate.getShape()).thenReturn(shape);
         return this;
     }
 
