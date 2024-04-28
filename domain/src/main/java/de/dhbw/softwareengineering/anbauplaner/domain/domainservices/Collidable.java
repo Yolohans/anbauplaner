@@ -1,11 +1,10 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.domainservices;
 
+import de.dhbw.softwareengineering.anbauplaner.domain.domainservices.exceptions.ChildDoesNotFitException;
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 public interface Collidable {
     Shape getShape();
@@ -36,5 +35,16 @@ public interface Collidable {
         } else {
             return false;
         }
+    }
+
+    default List<Collidable> doesNotCover(List<Collidable> others) {
+        List<Collidable> colliders = new ArrayList<>();
+
+        for (Collidable collidable : others) {
+            if (collidable.doesNotFitInto(this)) {
+                colliders.add(collidable);
+            };
+        }
+        return colliders;
     }
 }
