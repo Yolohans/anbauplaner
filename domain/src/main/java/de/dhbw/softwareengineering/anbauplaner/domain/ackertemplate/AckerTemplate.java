@@ -134,7 +134,6 @@ public class AckerTemplate implements Collidable {
     }
 
     public void attachBeetToTunnelAtPosition(UUID beetId, UUID targetTunnelId, Point position) {
-        // future: collision and inbound validation in TunnelTemplate --> shall I put it here?
         BeetTemplate beet = this.getBeetById(beetId);
         TunnelTemplate sourceTunnel = this.getTunnelById(beet.getTunnelId());
         TunnelTemplate targetTunnel = this.getTunnelById(targetTunnelId);

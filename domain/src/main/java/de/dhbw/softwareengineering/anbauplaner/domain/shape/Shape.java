@@ -30,9 +30,13 @@ public abstract class Shape implements Collidable {
 
     public abstract boolean collidesWithRectangle(Rectangle other);
 
-    public abstract boolean doesNotFitIn(Shape other);
+    public abstract boolean fitsIn(Shape other);
 
-    public abstract boolean doesNotFitInRectangle(Rectangle other);
+    public abstract boolean fitInRectangle(Rectangle other);
+
+    public abstract boolean covers(Shape other);
+
+    public abstract boolean coversRectangle(Rectangle other);
 
     @Override
     public abstract String toString();
@@ -42,4 +46,9 @@ public abstract class Shape implements Collidable {
 
     @Override
     public abstract int hashCode();
+
+    @Override
+    public Shape getShape() {
+        return this;
+    }
 }

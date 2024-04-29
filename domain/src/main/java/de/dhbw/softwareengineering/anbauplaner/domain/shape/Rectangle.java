@@ -81,23 +81,33 @@ public final class Rectangle extends Shape {
     }
 
     @Override
-    public Shape getShape() {
-        return this;
+    public boolean fitsIn(Shape other) {
+        return other.coversRectangle(this);
     }
 
     @Override
-    public boolean doesNotFitIn(Shape other) {
-        return other.doesNotFitInRectangle(this);
-    }
-
-    @Override
-    public boolean doesNotFitInRectangle(Rectangle other) {
-        boolean positionFits =
+    public boolean fitInRectangle(Rectangle other) {
+        boolean itFits =
                 this.getPosition().getX() >= other.getPosition().getX() &&
                 this.getPosition().getY() >= other.getPosition().getY() &&
                 this.getPosition().getX() + this.getXLength() <= other.getPosition().getX() + other.getXLength() &&
                 this.getPosition().getY() + this.getYLength() <= other.getPosition().getY() + other.getYLength();
-        return !positionFits;
+        return itFits;
+    }
+
+    @Override
+    public boolean covers(Shape other) {
+        return other.fitInRectangle(this);
+    }
+
+    @Override
+    public boolean coversRectangle(Rectangle other) {
+        boolean itCovers =
+                this.getPosition().getX() <= other.getPosition().getX() &&
+                this.getPosition().getY() <= other.getPosition().getY() &&
+                this.getPosition().getX() + this.getXLength() >= other.getPosition().getX() + other.getXLength() &&
+                this.getPosition().getY() + this.getYLength() >= other.getPosition().getY() + other.getYLength();
+        return itCovers;
     }
 
     @Override

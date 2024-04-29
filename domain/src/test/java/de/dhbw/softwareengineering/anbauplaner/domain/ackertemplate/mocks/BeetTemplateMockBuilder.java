@@ -66,7 +66,7 @@ public class BeetTemplateMockBuilder {
         mockBeetTemplate = Mockito.mock(BeetTemplateCopy.class);
     }
 
-    public BeetTemplateMockBuilder withBeetTemplateId(UUID beetId) {
+    public BeetTemplateMockBuilder withBeetId(UUID beetId) {
         Mockito.when(mockBeetTemplate.getBeetId()).thenReturn(beetId);
         return this;
     }

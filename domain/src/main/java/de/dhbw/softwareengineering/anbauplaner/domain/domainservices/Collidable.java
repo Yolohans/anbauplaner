@@ -1,6 +1,5 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.domainservices;
 
-import de.dhbw.softwareengineering.anbauplaner.domain.domainservices.exceptions.ChildDoesNotFitException;
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
 
 import java.util.ArrayList;
@@ -30,7 +29,7 @@ public interface Collidable {
     }
 
     default boolean doesNotFitInto(Collidable other) {
-        if (!this.getShape().doesNotFitIn(other.getShape())) {
+        if (!this.getShape().fitsIn(other.getShape())) {
             return true;
         } else {
             return false;

@@ -1,6 +1,5 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate.mocks;
 
-import de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate.AckerTemplate;
 import de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate.BeetTemplate;
 import de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate.TunnelTemplate;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Name;
@@ -61,13 +60,23 @@ public class TunnelTemplateMockBuilder {
         mockTunnelTemplate = Mockito.mock(TunnelTemplateCopy.class);
     }
 
-    public TunnelTemplateMockBuilder withTunnelTemplateId(UUID tunnelId) {
+    public TunnelTemplateMockBuilder withAckerId(UUID ackerId) {
+        Mockito.when(mockTunnelTemplate.getAckerId()).thenReturn(ackerId);
+        return this;
+    }
+
+    public TunnelTemplateMockBuilder withTunnelId(UUID tunnelId) {
         Mockito.when(mockTunnelTemplate.getTunnelId()).thenReturn(tunnelId);
         return this;
     }
 
     public TunnelTemplateMockBuilder withName(Name name) {
         Mockito.when(mockTunnelTemplate.getName()).thenReturn(name);
+        return this;
+    }
+
+    public TunnelTemplateMockBuilder withShape(Shape shape) {
+        Mockito.when(mockTunnelTemplate.getShape()).thenReturn(shape);
         return this;
     }
 

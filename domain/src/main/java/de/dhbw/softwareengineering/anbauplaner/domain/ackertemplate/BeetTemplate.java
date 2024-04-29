@@ -47,12 +47,6 @@ public class BeetTemplate implements Collidable {
         }
     }
 
-    protected void attachToTunnel(TunnelTemplate tunnel) {
-        this.ackerId = null;
-        this.tunnelId = tunnel.getTunnelId();
-        this.shape = shape.subtractPosition(tunnel.getShape().getPosition());
-    }
-
     protected void attachToTunnel(TunnelTemplate tunnel, Point position) {
         this.ackerId = null;
         this.tunnelId = tunnel.getTunnelId();

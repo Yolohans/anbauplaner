@@ -69,9 +69,39 @@ public class RectangleTest {
     }
 
     @Test
-    public void testFitsInRectangle() {
-        Rectangle rectangle1 = new Rectangle(10.0, 5.0, new Point(0.0, 0.0));
-        Rectangle rectangle2 = new Rectangle(20.0, 10.0, new Point(0.0, 0.0));
-        assertTrue(rectangle1.doesNotFitInRectangle(rectangle2));
+    public void testDoesNotFitInRectangleinX() {
+        Rectangle rectangle1 = new Rectangle(15.0, 5.0, new Point(0.0, 0.0));
+        Rectangle rectangle2 = new Rectangle(10.0, 10.0, new Point(0.0, 0.0));
+        assertTrue(rectangle1.fitInRectangle(rectangle2));
     }
+
+    @Test
+    public void testDoesNotFitInRectangleInY() {
+        Rectangle rectangle1 = new Rectangle(5.0, 15.0, new Point(0.0, 0.0));
+        Rectangle rectangle2 = new Rectangle(10.0, 10.0, new Point(0.0, 0.0));
+        assertTrue(rectangle1.fitInRectangle(rectangle2));
+    }
+
+    @Test
+    public void testDoesNotFitInRectangleByPosition() {
+        Rectangle rectangle1 = new Rectangle(5.0, 5.0, new Point(5.1, 5.1));
+        Rectangle rectangle2 = new Rectangle(10.0, 10.0, new Point(0.0, 0.0));
+        assertTrue(rectangle1.fitInRectangle(rectangle2));
+    }
+
+    @Test
+    public void testDoesFitInRectangle() {
+        Rectangle rectangle1 = new Rectangle(5.0, 5.0, new Point(0.0, 0.0));
+        Rectangle rectangle2 = new Rectangle(10.0, 10.0, new Point(0.0, 0.0));
+        assertFalse(rectangle1.fitInRectangle(rectangle2));
+    }
+
+    @Test
+    public void testDoesFitInRectangleEdgePosition() {
+        Rectangle rectangle1 = new Rectangle(5.0, 5.0, new Point(5.0, 5.0));
+        Rectangle rectangle2 = new Rectangle(10.0, 10.0, new Point(0.0, 0.0));
+        assertFalse(rectangle1.fitInRectangle(rectangle2));
+    }
+
+
 }

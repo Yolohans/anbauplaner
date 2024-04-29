@@ -1,6 +1,5 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate;
 
-import de.dhbw.softwareengineering.anbauplaner.domain.anbauplan.Beet;
 import de.dhbw.softwareengineering.anbauplaner.domain.domainservices.Collidable;
 import de.dhbw.softwareengineering.anbauplaner.domain.domainservices.exceptions.ChildDoesNotFitException;
 import de.dhbw.softwareengineering.anbauplaner.domain.domainservices.exceptions.CollisionException;
