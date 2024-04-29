@@ -1,9 +1,6 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate.mocks;
 
-import de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate.AckerTemplate;
 import de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate.BeetTemplate;
-import de.dhbw.softwareengineering.anbauplaner.domain.ackertemplate.TunnelTemplate;
-import de.dhbw.softwareengineering.anbauplaner.domain.anbauplan.Tunnel;
 import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Name;
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
 import org.mockito.Mockito;

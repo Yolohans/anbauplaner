@@ -8,12 +8,11 @@ import de.dhbw.softwareengineering.anbauplaner.domain.genericvalueobjects.Name;
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Point;
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Rectangle;
 import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class AckerTemplateTunnelCreationTests {
 
@@ -51,20 +50,20 @@ public class AckerTemplateTunnelCreationTests {
 
     @Test
     void testAckerConstructor() {
-        assertAll(
-                () -> assertEquals(this.ackerName, ackerTemplate.getName()),
-                () -> assertEquals(this.ackerShape, ackerTemplate.getShape())
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(this.ackerName, ackerTemplate.getName()),
+                () -> Assertions.assertEquals(this.ackerShape, ackerTemplate.getShape())
         );
     }
 
     @Test
     public void testCreateTunnelDoesNotFit() {
-        assertThrows(ChildDoesNotFitException.class, () -> ackerTemplate.createTunnel(new Name("Name"),new Rectangle(510.,510.,new Point(500., 500.))));
+        Assertions.assertThrows(ChildDoesNotFitException.class, () -> ackerTemplate.createTunnel(new Name("Name"),new Rectangle(510.,510.,new Point(500., 500.))));
     }
 
     @Test
     public void testCreateTunnelCollides_withTunnel() {
-        assertThrows(CollisionException.class, () -> ackerTemplate.createTunnel(new Name("Name"),new Rectangle(100.,100.,new Point(800., 10.))));
+        Assertions.assertThrows(CollisionException.class, () -> ackerTemplate.createTunnel(new Name("Name"),new Rectangle(100.,100.,new Point(800., 10.))));
     }
 }
 
