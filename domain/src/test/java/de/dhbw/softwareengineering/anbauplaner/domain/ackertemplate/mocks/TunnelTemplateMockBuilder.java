@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class TunnelTemplateMockBuilder {
@@ -34,7 +35,7 @@ public class TunnelTemplateMockBuilder {
         }
 
         @Override
-        public HashMap<UUID, BeetTemplate> getBeete() {
+        public Map<UUID, BeetTemplate> getBeete() {
             return super.getBeete();
         }
 
