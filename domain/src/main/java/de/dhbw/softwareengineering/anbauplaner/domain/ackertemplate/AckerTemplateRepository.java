@@ -10,4 +10,6 @@ public interface AckerTemplateRepository {
     Optional<AckerTemplate> findAckerTemplateById(UUID ackerTemplateId);
 
     AckerTemplate save(AckerTemplate ackerTemplate);
+
+    void deleteById(UUID ackerTemplateId);
 }

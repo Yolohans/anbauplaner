@@ -10,10 +10,7 @@ import de.dhbw.softwareengineering.anbauplaner.domain.shape.Shape;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 public class TunnelTemplate implements Collidable {
@@ -31,7 +28,7 @@ public class TunnelTemplate implements Collidable {
     private UUID ackerId;
 
     @OneToMany
-    protected HashMap<UUID, BeetTemplate> beete;
+    protected Map<UUID, BeetTemplate> beete = new HashMap<>();
 
     private LocalDateTime createdAt;
 
@@ -42,7 +39,6 @@ public class TunnelTemplate implements Collidable {
         this.name = name;
         this.shape = shape;
         this.ackerId = ackerId;
-        this.beete = new HashMap<UUID, BeetTemplate>();
         this.createdAt = LocalDateTime.now();
     }
 
@@ -110,7 +106,7 @@ public class TunnelTemplate implements Collidable {
         return ackerId;
     }
 
-    public HashMap<UUID, BeetTemplate> getBeete() {
+    public Map<UUID, BeetTemplate> getBeete() {
         return beete;
     }
 

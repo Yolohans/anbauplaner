@@ -32,4 +32,9 @@ public class AckerTemplateRepositoryBridge implements AckerTemplateRepository {
     public AckerTemplate save(final AckerTemplate ackerTemplate) {
         return this.springDataAckerTemplateRepository.save(ackerTemplate);
     }
+
+    @Override
+    public void deleteById(final UUID ackerTemplateId) {
+        this.springDataAckerTemplateRepository.deleteById(ackerTemplateId);
+    }
 }

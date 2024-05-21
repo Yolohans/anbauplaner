@@ -1,5 +1,6 @@
 package de.dhbw.softwareengineering.anbauplaner.domain.shape;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.dhbw.softwareengineering.anbauplaner.domain.domainservices.Collidable;
 import jakarta.persistence.*;
 
@@ -48,6 +49,7 @@ public abstract class Shape implements Collidable {
     public abstract int hashCode();
 
     @Override
+    @JsonIgnore
     public Shape getShape() {
         return this;
     }

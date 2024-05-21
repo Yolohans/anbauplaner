@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Entity
@@ -31,10 +32,10 @@ public class AckerTemplate implements Collidable {
     private Shape shape;
 
     @OneToMany(mappedBy = "ackerId", cascade=CascadeType.ALL)
-    private HashMap<UUID,TunnelTemplate> tunnels;
+    private Map<UUID,TunnelTemplate> tunnels = new HashMap<>();
 
     @OneToMany(mappedBy = "ackerId")
-    private HashMap<UUID,BeetTemplate> beete;
+    private Map<UUID,BeetTemplate> beete = new HashMap<>();
 
     private LocalDateTime createdAt;
     private LocalDateTime lastUpdateAt;
@@ -42,8 +43,6 @@ public class AckerTemplate implements Collidable {
     public AckerTemplate(Name name, Shape shape) {
         this.name = name;
         this.shape = shape;
-        this.tunnels = new HashMap<UUID,TunnelTemplate>();
-        this.beete = new HashMap<UUID,BeetTemplate>();
         LocalDateTime now = LocalDateTime.now();
         this.createdAt = now;
         this.lastUpdateAt = now;
@@ -55,7 +54,7 @@ public class AckerTemplate implements Collidable {
 
     public AckerTemplate() {}
 
-    public void createTunnel(Name name, Shape shape) {
+    public TunnelTemplate createTunnel(Name name, Shape shape) {
 
         TunnelTemplate tunnel = new TunnelTemplate(name, shape, this.getAckerId());
 
@@ -69,9 +68,10 @@ public class AckerTemplate implements Collidable {
         }
 
         this.addTunnel(tunnel);
+        return tunnel;
     }
 
-    public void createBeetInAcker(Name name, Shape beetShape) {
+    public BeetTemplate createBeetInAcker(Name name, Shape beetShape) {
         if (beetShape.doesNotFitInto(this)) {
             throw new ChildDoesNotFitException(beetShape,this,"Position and dimension of the beet exceed the acker's dimensions.");
         }
@@ -88,9 +88,10 @@ public class AckerTemplate implements Collidable {
                 .build();
 
         this.addBeet(beet);
+        return beet;
     }
 
-    public void createBeetInTunnel(Name name, Shape beetShape, UUID tunnelId) {
+    public BeetTemplate createBeetInTunnel(Name name, Shape beetShape, UUID tunnelId) {
         TunnelTemplate tunnel = this.getTunnelById(tunnelId);
 
         if (beetShape.doesNotFitInto(tunnel)) {
@@ -109,6 +110,7 @@ public class AckerTemplate implements Collidable {
                 .build();
 
         tunnel.createBeetAtPosition(beet);
+        return beet;
     }
 
     public void deleteBeet(UUID beetId) {
@@ -124,12 +126,13 @@ public class AckerTemplate implements Collidable {
     public void deleteTunnel(UUID tunnelId, boolean keepBeete) {
         TunnelTemplate tunnel = this.getTunnelById(tunnelId);
 
-        if (keepBeete) {
+        //this is not working yet
+        /*if (keepBeete) {
             for (HashMap.Entry<UUID, BeetTemplate> entry : tunnel.getBeete().entrySet()) {
                 BeetTemplate beet = entry.getValue();
                 beet.detachFromTunnel(tunnel);
             }
-        }
+        }*/
         this.removeTunnelById(tunnelId);
     }
 
@@ -170,7 +173,7 @@ public class AckerTemplate implements Collidable {
 
     }
 
-    public void moveTunnelToPosition(UUID tunnelId, Point position) {
+    public TunnelTemplate moveTunnelToPosition(UUID tunnelId, Point position) {
         TunnelTemplate tunnel = this.getTunnelById(tunnelId);
         Shape targetShape = tunnel.getShape().replacePosition(position);
 
@@ -184,6 +187,7 @@ public class AckerTemplate implements Collidable {
         }
 
         tunnel.moveToPosition(position);
+        return tunnel;
     }
 
     public void changeName(Name name) {
@@ -277,11 +281,11 @@ public class AckerTemplate implements Collidable {
         return this.getBeete().get(beetId);
     }
 
-    public HashMap<UUID, TunnelTemplate> getTunnels() {
+    public Map<UUID, TunnelTemplate> getTunnels() {
         return tunnels;
     }
 
-    public HashMap<UUID, BeetTemplate> getBeete() {
+    public Map<UUID, BeetTemplate> getBeete() {
         return beete;
     }
 
@@ -310,6 +314,34 @@ public class AckerTemplate implements Collidable {
             collidables.add(elem);
         }
         return collidables;
+    }
+
+    private void setAckerId(UUID ackerId) {
+        this.ackerId = ackerId;
+    }
+
+    private void setName(Name name) {
+        this.name = name;
+    }
+
+    private void setShape(Shape shape) {
+        this.shape = shape;
+    }
+
+    private void setTunnels(HashMap<UUID, TunnelTemplate> tunnels) {
+        this.tunnels = tunnels;
+    }
+
+    private void setBeete(HashMap<UUID, BeetTemplate> beete) {
+        this.beete = beete;
+    }
+
+    private void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    private void setLastUpdateAt(LocalDateTime lastUpdateAt) {
+        this.lastUpdateAt = lastUpdateAt;
     }
 
     @Override

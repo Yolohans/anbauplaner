@@ -32,4 +32,14 @@ public class TunnelTemplateRepositoryBridge implements TunnelTemplateRepository 
     public TunnelTemplate save(final TunnelTemplate tunnelTemplate) {
         return this.springDataTunnelTemplateRepository.save(tunnelTemplate);
     }
+
+    @Override
+    public List<TunnelTemplate> findTunnelTemplatesByAckerId(UUID ackerTemplateId) {
+        return this.springDataTunnelTemplateRepository.findTunnelTemplatesByAckerId(ackerTemplateId);
+    }
+
+    @Override
+    public void deleteById(final UUID tunnelTemplateId) {
+        this.springDataTunnelTemplateRepository.deleteById(tunnelTemplateId);
+    }
 }

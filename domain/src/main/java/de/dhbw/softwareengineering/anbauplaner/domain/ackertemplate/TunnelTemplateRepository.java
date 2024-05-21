@@ -11,4 +11,8 @@ public interface TunnelTemplateRepository {
     Optional<TunnelTemplate> findTunnelTemplateById(UUID tunnelTemplateId);
 
     TunnelTemplate save(TunnelTemplate tunnelTemplate);
+
+    List<TunnelTemplate> findTunnelTemplatesByAckerId(UUID ackerTemplateId);
+
+    void deleteById(UUID tunnelTemplateId);
 }
